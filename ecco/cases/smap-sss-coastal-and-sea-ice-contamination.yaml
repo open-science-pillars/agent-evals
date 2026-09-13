@@ -1,0 +1,54 @@
+# Authored 2026-09-13 for the OSCAR and SMAP salinity knowledge
+# deliverable. Ground truth: the concepts below; the gotcha is a draft
+# until the maintainer reviews it. Manifest registration in the evals
+# repository is the coordinator's follow-up.
+id: smap-sss-coastal-and-sea-ice-contamination
+type: gotcha-avoidance
+targets: []  # no ocean-science skill; the case rests on the concepts alone
+concept_basis:
+  - knowledge/podaac/gotchas/smap-sss-coastal-and-sea-ice-contamination.md
+  - knowledge/podaac/datasets/smap-sss-jpl.md
+prompt: >
+  Using the JPL SMAP Level 3 8-day sea surface salinity from PO.DAAC,
+  build a monthly salinity time series for the Chukchi Sea shelf
+  within 50 km of the Alaskan coast from 2015 through 2024 by
+  averaging the valid grid cells there, and report the freshening
+  trend.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that land and sea ice inside
+      the radiometer's view contaminate the retrieval, that the
+      product corrects for land and removes land- and ice-flagged
+      observations before gridding with a deliberately relaxed
+      filter, that its coastal reach is about 35 km in ice-free
+      conditions, and that the Level 3 carries only land_fraction and
+      ice_fraction and no flag; AND therefore does not average
+      whatever cells are valid each month, but defines the series on
+      a fixed set of cells chosen with a stated land and ice fraction
+      threshold, carries the number of contributing cells per month,
+      and treats the seasonal ice cover as the series' sampling (the
+      shelf is ice covered for part of every year, so the months with
+      values are the open-water months and the set of cells changes
+      at the ice edge); AND declines to report a freshening trend as
+      the shelf's salinity change without those conditions, or reports
+      it only with the sampling, the residual contamination and the
+      product's uncertainty field stated beside it. Noting that a
+      fresh anomaly near the ice edge can be sea-ice contamination,
+      or that the JPL and RSS products differ in their coastal
+      exclusion so a cross-check between them near the coast is not
+      an error bar, strengthens a pass. FAIL if the response averages
+      the nearest valid cells month by month and reports a trend as
+      the ocean's, treats the Level 3 field as flag-free and complete,
+      or ignores the ice season in a ten-year coastal Arctic series.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is stated in the prompt as the method: average the valid
+  cells within 50 km of the coast. The product decides which cells
+  are valid, month by month, by its land and ice exclusion, so the
+  averaged set changes with the geometry and the ice season and the
+  trend is fitted to a changing sample with residual contamination in
+  it. A pass names the product's fields (land_fraction, ice_fraction),
+  its coastal reach and the ice season before any number, and either
+  refuses the trend as asked or fences it.
