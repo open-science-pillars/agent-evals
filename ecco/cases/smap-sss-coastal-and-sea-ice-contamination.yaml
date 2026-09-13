@@ -21,9 +21,11 @@ graders:
       the radiometer's view contaminate the retrieval, that the
       product corrects for land and removes land- and ice-flagged
       observations before gridding with a deliberately relaxed
-      filter, that its coastal reach is about 35 km in ice-free
-      conditions, and that the Level 3 carries only land_fraction and
-      ice_fraction and no flag; AND therefore does not average
+      filter, that the product's own exclusion (not the user's 50 km)
+      sets how close to the coast a value can exist and that the V5
+      guide states no reach of its own, and that the Level 3 carries
+      only land_fraction and ice_fraction and no flag; AND therefore
+      does not average
       whatever cells are valid each month, but defines the series on
       a fixed set of cells chosen with a stated land and ice fraction
       threshold, carries the number of contributing cells per month,
@@ -50,5 +52,8 @@ notes: >
   averaged set changes with the geometry and the ice season and the
   trend is fitted to a changing sample with residual contamination in
   it. A pass names the product's fields (land_fraction, ice_fraction),
-  its coastal reach and the ice season before any number, and either
-  refuses the trend as asked or fences it.
+  the exclusion mechanism that sets the coastal reach and the ice
+  season before any number, and either refuses the trend as asked or
+  fences it. The case grades on the mechanism, not on a kilometre
+  figure: the 35 km reach in the literature is the JPL group's 2018
+  assessment of the algorithm of that time, not a V5 guide statement.
