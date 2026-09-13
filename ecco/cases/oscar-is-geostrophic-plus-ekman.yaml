@@ -1,0 +1,53 @@
+# Authored 2026-09-13 for the OSCAR and SMAP salinity knowledge
+# deliverable. Ground truth: the concepts below; the gotcha is a draft
+# until the maintainer reviews it. Manifest registration in the evals
+# repository is the coordinator's follow-up.
+id: oscar-is-geostrophic-plus-ekman
+type: gotcha-avoidance
+targets: []  # no ocean-science skill; the case rests on the concepts alone
+concept_basis:
+  - knowledge/podaac/gotchas/oscar-is-geostrophic-plus-ekman.md
+  - knowledge/podaac/datasets/oscar-v2.md
+prompt: >
+  I have hourly ADCP velocities at 20 m depth from a mooring at 2N,
+  140W for all of 2019. Using the OSCAR version 2 final surface
+  currents from PO.DAAC, compute the RMS difference between OSCAR and
+  the mooring for u and v over the year and tell me how accurate OSCAR
+  is at this site.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that OSCAR is a diagnosed
+      current, a geostrophic plus wind-driven plus thermal-wind
+      solution of a steady linear model averaged over the top 30 m,
+      with no tides, inertial motion or other ageostrophic flow, so
+      an RMS difference against raw hourly ADCP velocities measures
+      the physics OSCAR omits as much as OSCAR's error; AND states
+      what a like-for-like comparison is: the ADCP record low-pass
+      filtered to subinertial, detided time scales (or daily means at
+      least), the depth difference between a 20 m instrument and a
+      30 m layer average stated, and the comparison named as one
+      against the modeled part of the flow; AND notes that 2N is
+      inside the band where OSCAR uses its own equatorial solution
+      and that the product documents the meridional component near
+      the equator as its weakest, so the v comparison is read with
+      that caveat; AND does not present the RMS difference as
+      OSCAR's accuracy without those qualifications. Naming that the
+      product ships no uncertainty field, or that ug and vg are the
+      geostrophic part and u minus ug the model's wind-driven term
+      rather than an observed ageostrophic residual, strengthens a
+      pass. FAIL if the response computes or describes the RMS
+      against the raw hourly series and reports it as OSCAR's
+      accuracy, treats OSCAR as a measured total current, or
+      attributes the difference to OSCAR error or to the ocean
+      without naming the omitted physics.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is that the prompt asks for an accuracy number and hands
+  over an hourly record: the tidal and inertial variance of the ADCP
+  series lands in the RMS and reads as OSCAR error, and the L4 grid
+  gives no hint that the product never contained those motions. The
+  equatorial site adds the second layer: at 2N the product is on its
+  equatorial solution and its meridional component is the one the
+  handbook names as weakest. A pass names both before any number.
