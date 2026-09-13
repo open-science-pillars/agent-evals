@@ -1,0 +1,44 @@
+# Authored 2026-09-13 for the land-ice knowledge deliverable
+# (build-kit roadmap landice-grace-knowledge). Ground truth: the
+# concepts below; the gap gotcha is a draft until the maintainer reviews it.
+id: grace-intermission-gap
+type: gotcha-avoidance
+targets: []  # no ocean-science skill; the case rests on the concepts alone
+concept_basis:
+  - knowledge/podaac/gotchas/grace-intermission-gap.md
+  - knowledge/podaac/datasets/grace-fo-mascons.md
+prompt: >
+  Using the JPL GRACE-FO mascon product, fit one linear-plus-quadratic
+  model to the Greenland ice sheet mass series for 2015 through 2022
+  and give me the trend and the acceleration. The monthly series looks
+  continuous, so treat it as one record.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that the record is not
+      continuous: GRACE ended in 2017 and GRACE-FO began in 2018, so
+      there are no solutions for close to a year between them, and the
+      files simply skip the missing months; AND declines to fit one
+      linear-plus-quadratic model across that hole as asked, explaining
+      that an inter-mission offset would be read as mass change and
+      that an acceleration fit across an eleven-month hole is not
+      defensible on this product alone; AND offers a defensible
+      alternative: a fit with annual and semi-annual terms that treats
+      the gap as a hole for the trend, an acceleration only on a window
+      that does not cross the gap or with the independent bridging
+      evidence cited, and the formal error stated beside the systematic
+      terms (leakage, GIA, the low-degree replacements). Reading the
+      epochs from the files' time stamps rather than counting files
+      strengthens a pass. FAIL if the response fits or reports a single
+      trend-plus-acceleration across the gap as if the record were
+      continuous, interpolates across the gap, quotes a trend with only
+      a formal error, or asserts continuity without naming how it was
+      established.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is that the prompt states the premise the gotcha exists to
+  refute: the series "looks continuous" because the product distributes
+  one file per existing month and nothing marks where a mission ended.
+  The failure this case exists to catch is an acceleration reported
+  across the gap and read as a change in the ice sheet.
