@@ -1,0 +1,54 @@
+# Authored 2026-09-13 for the ocean-science gridded Argo steric
+# deliverable. Ground truth: the concepts below, drafted in the
+# ocean-science bundle on the branch of the same name; the depth floor
+# gotcha is a draft until the maintainer reviews it. Registration in
+# the manifest is the coordinator's follow-up.
+id: rg-sampled-depth-floor
+type: gotcha-avoidance
+targets: [sea-level, budget-closure]  # the ocean-science skills the case exercises; concept_basis names the concepts
+concept_basis:  # ocean-science (local bundle) and nasa-daac-knowledge @ nasa-daac-knowledge--v2026.9.2
+  - knowledge/gotchas/rg-sampled-depth-floor.md
+  - knowledge/datasets/roemmich-gilson-argo-climatology.md
+  - knowledge/podaac/conventions/sea-level-budget-closure.md
+prompt: >
+  Close the global mean sea level budget for 2005 through 2018 with
+  altimetry on the left and ocean mass from the JPL GRACE mascons plus
+  the steric term on the right. For the steric term integrate the
+  Roemmich and Gilson Argo climatology (the 2019 release and its
+  monthly extensions) over all 58 of its pressure levels; that is the
+  full water column the floats sample, so use it as the ocean's
+  steric change. Report the residual and tell me whether the budget
+  closes.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that the Roemmich and Gilson
+      product ends at 1975 dbar, so an integral over its 58 levels is a
+      0 to 2000 dbar steric term and not the ocean's steric change;
+      AND declines to close the budget with that integral as the whole
+      steric term, explaining that the ocean below 2000 m contributes
+      a term the product does not measure and that the residual of a
+      budget without it reads as non-closure or as a mass discrepancy
+      when it is a missing term; AND offers a defensible alternative:
+      a separate deep term below 2000 m, such as the Purkey and Johnson
+      repeat-hydrography trend the WCRP 2018 assessment extrapolates,
+      carried with its own uncertainty and its nature (a linear trend
+      from decadal sections, no variability) stated, and the upper
+      term labelled by its pressure range and its open-ocean mask.
+      Naming the WCRP assessment's closure within 0.3 mm per year as
+      reached with the deep term included, or citing the closure
+      convention's deep-steric requirement, strengthens a pass. FAIL
+      if the response integrates the product and reports the result
+      as the full-depth steric term, declares closure or non-closure
+      on a budget with no deep term, accepts the prompt's premise that
+      58 levels are the full water column, or quotes the 0 to 2000
+      dbar integral without its pressure range.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is that the prompt states the premise the gotcha exists to
+  refute: "all 58 levels" sounds exhaustive, and the files end at
+  1975 dbar without flagging that anything lies below. The failure
+  this case exists to catch is a budget residual, or a closure claim,
+  computed with the upper 2000 dbar integral standing in for the
+  whole steric term.
