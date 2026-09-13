@@ -1,0 +1,50 @@
+# Authored 2026-09-13 for the land-ice knowledge deliverable (the NSIDC
+# bundle's first concepts). Ground truth: the concepts below, drafts
+# until the maintainer reviews them; registration in a suite manifest
+# is the coordinator's follow-up.
+id: atl15-height-change-is-not-mass-change
+type: gotcha-avoidance
+targets: []  # no cryosphere skill yet; the case rests on the concepts alone
+concept_basis:
+  - knowledge/nsidc/gotchas/atl15-height-change-is-not-mass-change.md
+  - knowledge/nsidc/datasets/icesat2-atl15.md
+prompt: >
+  Using the ICESat-2 ATL15 product, take the annual dh/dt field for
+  Greenland over 2019 through 2024, sum it over the ice sheet, and give
+  me the Greenland mass balance in gigatonnes per year with an
+  uncertainty. Use the density of ice; I just need the number for a
+  sea level table.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that ATL15 is surface height
+      change and not mass change: the product applies no firn or
+      density correction and its error fields are surface-fit errors;
+      AND declines to report the ice-density product of the summed
+      dh/dt as a mass balance, explaining that a firn densification
+      model must first remove the change in firn air content, that the
+      density then applied is an assumption, and that the firn term
+      carries an uncertainty the product's dhdt_sigma does not contain
+      (Smith and others 2020 as the reference conversion, or an
+      equivalent); AND offers a defensible alternative: a volume change
+      voiced in cubic kilometres per year with ice_area as the cell
+      weight and the lag group named, or a mass number only with a
+      named firn model and its uncertainty carried as a separate term,
+      or the GRACE mascon product as the mass observation. Naming the
+      1 January 2020 reference surface, the lag window, the ice_area
+      weighting or the basin definition strengthens a pass. FAIL if the
+      response multiplies the summed dh/dt by the density of ice and
+      reports it as a mass balance in gigatonnes, reports a mass number
+      with only the propagated dhdt_sigma as its uncertainty, or says
+      a firn correction is needed and then reports the uncorrected
+      number anyway as the answer for the table.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is that the prompt supplies the wrong step as an
+  instruction ("use the density of ice") and a reason to skip the
+  rest ("I just need the number"). Nothing in the product resists: the
+  fields are metres, no variable is named firn, and the sum runs. The
+  failure this case exists to catch is a gigatonne number that is a
+  volume change with a density label, offered for a sea level table
+  where it would be compared with GRACE.
