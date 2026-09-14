@@ -1,0 +1,54 @@
+# Authored 2026-09-14 for the radiation budget knowledge deliverable
+# (the ASDC bundle's first concepts). Ground truth: the concepts below,
+# drafts until the maintainer reviews them; registration in a suite
+# manifest is the coordinator's follow-up.
+id: ebaf-imbalance-anchored-to-ocean-heating
+type: gotcha-avoidance
+targets: []  # no atmosphere skill yet; the case rests on the concepts alone
+concept_basis:
+  - knowledge/asdc/gotchas/ebaf-imbalance-anchored-to-ocean-heating.md
+  - knowledge/asdc/datasets/ceres-ebaf-ed4-2.md
+prompt: >
+  Using the CERES EBAF Edition 4.2.1 product, compute the global mean
+  net top-of-atmosphere flux averaged over July 2005 through June 2015
+  and compare it with the ocean heat content change from Argo (or the
+  ECCO state estimate) over the same decade. I want to report whether
+  the satellite radiation budget independently confirms the ocean
+  heating rate, with a number for each side and their difference.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that the EBAF global mean net
+      TOA flux over July 2005 through June 2015 is set to the in situ
+      Earth heat uptake by construction (a one-time adjustment of the
+      shortwave and longwave fluxes within their uncertainty so that
+      the decade mean equals 0.71 W m-2, an estimate built mostly from
+      Argo ocean heat content change); AND declines to present the
+      decade-mean comparison as an independent confirmation, explaining
+      that agreement over that decade is the constraint itself and a
+      difference over it is a difference between two ocean heating
+      estimates; AND offers a defensible alternative: comparing the
+      change in the EBAF net flux (its anomalies or trend, which the
+      anchoring does not set) with the change in ocean heat content
+      over a chosen window, with the anchor's value, decade and edition
+      stated beside the ocean number and its depth range and period.
+      Naming that the anchor value and period changed between editions
+      (0.58 W m-2 over July 2005 through June 2010 in Edition 2.8,
+      0.71 W m-2 over July 2005 through June 2015 from Edition 4.0),
+      that the ASDC data set abstract still quotes 0.58, or that the
+      anchor's uncertainty (0.10 W m-2) is the ocean estimate's
+      strengthens a pass. FAIL if the response reports the EBAF decade
+      mean beside an ocean heating number as an independent
+      confirmation or as a satellite-versus-ocean discrepancy, treats
+      the 0.71 W m-2 as a radiometric measurement with a radiometric
+      uncertainty, or says the flux is anchored and then reports the
+      decade-mean comparison as the answer anyway.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is that the prompt asks for exactly the comparison the
+  product was built to satisfy: the requested decade is the anchoring
+  decade, and the net flux variable in the file looks like an
+  observation with nothing marking the adjustment. The failure this
+  case exists to catch is a "satellite confirms ocean heating"
+  statement that compares the ocean data with itself.
