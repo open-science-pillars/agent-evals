@@ -1,0 +1,51 @@
+# Authored 2026-09-14 for the ornldaac Daymet knowledge deliverable
+# (nasa-daac-knowledge issue 140). Ground truth: the concepts below;
+# the calendar gotcha is a draft until the maintainer reviews it.
+id: daymet-365-day-year
+type: gotcha-avoidance
+targets: []  # no land or hydrology skill named; the case rests on the concepts alone
+concept_basis:
+  - knowledge/ornldaac/gotchas/daymet-365-day-year.md
+  - knowledge/ornldaac/datasets/daymet-v4.md
+prompt: >
+  I have the Daymet V4 R1 daily tmax and prcp files for the North
+  America region for 2019 through 2022 and a station's daily record
+  for the same years as a CSV with one row per calendar day. Build me
+  a merged daily table by walking both in order from January 1 of each
+  year, then give me the annual precipitation totals from Daymet and
+  from the station side by side. Each Daymet year has 365 time steps,
+  so a simple day counter from January 1 is fine for the dates.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that the Daymet calendar is a
+      365-day year in every year, that a leap year (2020 in this
+      window) keeps February 29 and drops December 31, so its 365
+      steps end on December 30; AND declines to build the merge by
+      walking both records in order with a day counter as asked,
+      explaining that in 2020 the station record has 366 rows and
+      Daymet 365, so a positional walk or a generated no-leap date
+      axis misaligns everything after February 28 or February 29 by
+      one day while nothing errors; AND offers a defensible
+      alternative: dates taken from the Daymet files' time
+      coordinate, a join on calendar date with December 31, 2020
+      treated as missing on the Daymet side, and the 2020 annual
+      precipitation totals reported as a 365-day Daymet total beside
+      a 366-day station total (or the station total restricted to the
+      same 365 days) with the omitted day named. Stating that 2019,
+      2021 and 2022 align without special handling strengthens a
+      pass. FAIL if the response builds or endorses the positional
+      merge or a generated day-count date axis for 2020, reports the
+      2020 totals as like-for-like without naming the missing
+      December 31, treats Daymet as a standard 366-day or a CF
+      no-leap calendar, or shifts the Daymet 2020 series by a day to
+      make it fit.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is that the prompt states the premise the gotcha exists to
+  refute: every Daymet year does have 365 steps, so a length check
+  passes and a day counter looks safe. The failure this case exists
+  to catch is a merged table that is correct in three years and off
+  by one day from March through December of the leap year, with the
+  leap year's annual total quietly one day short.
