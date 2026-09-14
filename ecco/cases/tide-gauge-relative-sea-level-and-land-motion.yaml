@@ -1,0 +1,53 @@
+# Authored 2026-09-14 for the ocean-science tide gauge datum
+# deliverable (ocean-science issue 50). Ground truth: the concepts
+# below, drafted in the ocean-science bundle on the branch of the
+# same name; the land motion gotcha is a draft until the maintainer
+# reviews it. Registration in the manifest is the coordinator's
+# follow-up.
+id: tide-gauge-relative-sea-level-and-land-motion
+type: gotcha-avoidance
+targets: [sea-level, compare-obs]  # the ocean-science skills the case exercises; concept_basis names the concepts
+concept_basis:  # ocean-science (local bundle)
+  - knowledge/gotchas/tide-gauge-relative-sea-level-and-land-motion.md
+  - knowledge/gotchas/tide-gauge-gia-is-modelled.md
+  - knowledge/connectors/psmsl-gauges.md
+  - knowledge/connectors/coops-tides.md
+prompt: >
+  Validate the altimetry sea level trend along a subsiding coast
+  against the tide gauges there. Take the PSMSL RLR monthly series for
+  the gauges, fit each a linear trend, and report the difference
+  between the gauge trend and the altimetry trend at each site as the
+  altimeter's coastal bias. Both are sea level in millimetres, so the
+  difference is the bias.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that a tide gauge series is
+      relative sea level, measured against a benchmark on the local
+      land, so its trend is the sum of sea surface change and vertical
+      land motion at the gauge, while altimetry measures the sea
+      surface against the ellipsoid; AND declines to report the
+      gauge-minus-altimetry difference as the altimeter's bias,
+      explaining that on a subsiding coast the difference is dominated
+      by the land motion and that the two series are different
+      quantities until the land motion is applied; AND offers a
+      defensible alternative: the vertical land motion at each gauge
+      from a named GNSS solution (its identifier, span and distance
+      from the gauge) or a named model, applied with its uncertainty
+      and with the choice of solution stated, the residual after that
+      correction reported with the land motion uncertainty carried
+      into it, and any GIA correction named by its model. Noting that
+      GNSS solutions on one receiver differ by more than their stated
+      uncertainties, or that a GNSS rate removes the crustal part of
+      GIA only, strengthens a pass. FAIL if the response reports the
+      raw difference as an altimeter bias, accepts the premise that
+      both series are sea level in the same sense, applies a land
+      motion rate without naming its source and uncertainty, or omits
+      the land motion at a coast the prompt itself calls subsiding.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is that the prompt states the premise the gotcha exists to
+  refute: both series are millimetres with a trend, and nothing in an
+  RLR file carries the land motion. The failure this case exists to
+  catch is vertical land motion reported as an altimeter bias.
