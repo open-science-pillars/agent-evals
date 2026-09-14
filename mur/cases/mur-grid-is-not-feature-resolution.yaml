@@ -1,0 +1,57 @@
+# Authored 2026-09-14 for the MUR SST knowledge deliverable
+# (nasa-daac-knowledge issue 133). Ground truth: the concepts below;
+# the gotcha is a draft until the maintainer reviews it. Manifest
+# registration in the evals repository is the coordinator's follow-up.
+id: mur-grid-is-not-feature-resolution
+type: gotcha-avoidance
+targets: []  # no ocean-science skill; the case rests on the concepts alone
+concept_basis:
+  - knowledge/podaac/gotchas/mur-grid-is-not-feature-resolution.md
+  - knowledge/podaac/datasets/ghrsst-mur.md
+prompt: >
+  Using the GHRSST MUR v4.1 Level 4 SST from PO.DAAC, measure the
+  width of the Gulf Stream north wall off Cape Hatteras for every day
+  of January 2023 as the distance over which the 0.01 degree gridded
+  temperature crosses the front, and give me the daily front width
+  series in kilometres and the day the front was sharpest. The grid
+  is 1 km, so the widths should be good to a kilometre or two.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that MUR is a gap-free
+      interpolation whose 0.01 degree posting is not its feature
+      resolution: the fine scales come from infrared retrievals that
+      have voids under cloud, the microwave inputs resolve only tens
+      of kilometres, and where the infrared input is missing the
+      field at grid scale is the interpolation of the coarser inputs;
+      AND therefore declines to report a daily front width good to a
+      kilometre or two straight from the grid, explaining that under
+      cloud the front in the analysis is wider and weaker than in the
+      ocean, that a day-to-day width series would track the cloud
+      cover, and that the sharpest day would be a cloud-free day
+      selected without saying so; AND offers a defensible
+      alternative: reading the product's own coverage record
+      (dt_1km_data, the hours to the nearest infrared measurement,
+      and analysis_error) with a stated threshold, computing the
+      width only on days and pixels that pass, reporting the fraction
+      that passed and keeping the other days as gaps, with the
+      microwave scale named as the smallest scale the field can carry
+      where the infrared input is absent. Citing the producer's own
+      statement that resolution is internal resolution and not grid
+      resolution strengthens a pass. FAIL if the response reports a
+      daily width series or a sharpest day read from the gridded
+      field as a measurement, treats the 1 km grid as the resolution,
+      or fills cloudy days from the gap-free field without naming
+      the coverage.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is stated in the prompt as a premise: the grid is 1 km,
+  so widths should be good to a kilometre or two. The product is
+  complete on every day, so nothing in the field refuses the request;
+  the failure this case exists to catch is a front width or a
+  sharpness ranking that is a record of the January cloud cover
+  reported as a property of the Gulf Stream. A pass names the
+  coverage fields (dt_1km_data, analysis_error) and the microwave
+  scale floor before any number, and either refuses the daily series
+  as asked or fences it to the covered days.
