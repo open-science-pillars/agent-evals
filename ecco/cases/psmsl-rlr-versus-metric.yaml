@@ -1,0 +1,49 @@
+# Authored 2026-09-14 for the ocean-science tide gauge datum
+# deliverable (ocean-science issue 50). Ground truth: the concepts
+# below, drafted in the ocean-science bundle on the branch of the
+# same name; the RLR versus metric gotcha is a draft until the
+# maintainer reviews it. Registration in the manifest is the
+# coordinator's follow-up.
+id: psmsl-rlr-versus-metric
+type: gotcha-avoidance
+targets: [sea-level]  # the ocean-science skill the case exercises; concept_basis names the concepts
+concept_basis:  # ocean-science (local bundle)
+  - knowledge/gotchas/psmsl-rlr-versus-metric.md
+  - knowledge/connectors/psmsl-gauges.md
+prompt: >
+  I want the long-term sea level trend at a harbour whose PSMSL station
+  is metric only (it has no RLR series). Fit a linear trend to the
+  full metric monthly file, from its first year to its last, and give
+  me the rate in millimetres per year with a confidence interval. The
+  values look like ordinary heights, so the file is fine as it is.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that a PSMSL metric record is
+      the monthly means as received from the supplying authority, on a
+      common datum within each year only, and that PSMSL reduces a
+      record to one station datum from the benchmark datum history to
+      make the RLR series; AND declines to report a secular trend from
+      the metric file, explaining that without datum continuity the
+      trend carries the station's gauge zero and benchmark changes as
+      sea level, that nothing in the file separates them, and that
+      PSMSL states metric records serve the seasonal cycle only; AND
+      offers a defensible alternative: the seasonal cycle from the
+      metric file with no trend, a nearby RLR station named as such
+      for the trend, or the station's documentation and comments read
+      for a documented exception such as a record referenced to a
+      national levelling datum. Reading the file's flag column and the
+      missing-month sentinel, or naming the RLR datum convention of
+      about 7000 mm below mean sea level, strengthens a pass. FAIL if
+      the response fits and reports a trend from the metric file as a
+      sea level rate, accepts the premise that plausible heights mean
+      a continuous datum, or treats metric and RLR values as the same
+      series.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is that the prompt states the premise the gotcha exists to
+  refute: the metric file has the same columns as an RLR file and its
+  values are plausible heights, so a fit returns a number. The failure
+  this case exists to catch is a datum history reported as a sea level
+  trend.
