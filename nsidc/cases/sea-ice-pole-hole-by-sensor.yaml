@@ -1,0 +1,63 @@
+# Authored 2026-09-14 for the sea ice knowledge deliverable (the NSIDC
+# bundle's sea ice concentration and Sea Ice Index concepts). Ground
+# truth: the concepts below, drafts until the maintainer reviews them;
+# registration in a suite manifest is the coordinator's follow-up.
+id: sea-ice-pole-hole-by-sensor
+type: gotcha-avoidance
+targets: []  # no cryosphere skill yet; the case rests on the concepts alone
+concept_basis:
+  - knowledge/nsidc/gotchas/sea-ice-pole-hole-by-sensor.md
+  - knowledge/nsidc/datasets/nsidc-0051-sea-ice-concentration.md
+  - knowledge/nsidc/datasets/sea-ice-index-g02135.md
+prompt: >
+  Using the NSIDC-0051 daily sea ice concentration files for the
+  Northern Hemisphere, compute the total Arctic sea ice area for every
+  September from 1979 through 2024 by multiplying each cell's
+  concentration by its area and summing over the grid, then fit a
+  linear trend and tell me how much area was lost per decade. The
+  files are all on the same 25 km grid, so just sum everything north
+  of the coast and treat the record as one series.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that the record is not one
+      series at the pole: each sensor leaves an unobserved circle
+      around the North Pole that the product masks with a flag value
+      (251) rather than a concentration, and the masked area shrinks
+      from 1.19 million km2 under SMMR to 0.31 under SSM/I in the
+      summer of 1987 and to 0.029 under SSMIS in January 2008 (the
+      Sea Ice Index adds a 0.064 AMSR2 mask from 2025); AND declines
+      to sum the grid as asked, explaining that the flag must be
+      separated from the concentrations before any arithmetic, that
+      the observed area itself grows by 0.88 million km2 in 1987 and
+      0.28 million km2 in 2008, and that a September area series or a
+      trend across those dates carries those steps as if they were ice
+      change; AND offers a defensible alternative: one pole hole
+      treatment held fixed across the whole record and named (the
+      largest, SMMR, hole applied to every year, which is what the Sea
+      Ice Index does for its anomaly and trend images; or, for extent,
+      the Index's assumption of full ice cover under the hole), the
+      Sea Ice Index's own monthly area series cited with its documented
+      August 1987 and January 2008 discontinuities and its removed
+      August 1987 value, or a trend computed on one mask epoch. Naming
+      the true cell areas from the NSIDC-0771 files rather than
+      625 km2, the 15 percent distinction between extent and area, or
+      the sensor transition residuals strengthens a pass. FAIL if the
+      response sums the grid across 1987 and 2008 as one series and
+      reports a per-decade loss without a pole hole treatment stated,
+      treats the 251 flag as a concentration or as zero without saying
+      so, reports a trend whose uncertainty omits the mask changes, or
+      names the pole hole and then reports the untreated sum anyway as
+      the answer.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is that the prompt asserts the premise the gotcha exists to
+  refute ("all on the same 25 km grid", "treat the record as one
+  series") and supplies the wrong method as an instruction ("just sum
+  everything"). Nothing in the files resists: the pole hole is a byte
+  value in the same array as the concentrations, the grid never
+  changes shape, and the sum runs. The failure this case exists to
+  catch is a per-decade area loss that contains a 0.88 million km2
+  step in 1987 and a 0.28 million km2 step in 2008 from the masks,
+  offered as a climate number.
