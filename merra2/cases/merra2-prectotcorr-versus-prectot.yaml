@@ -1,0 +1,57 @@
+# Authored 2026-09-14 for the GES DISC bundle's first concepts (the
+# MERRA-2 knowledge deliverable). Ground truth: the concepts below,
+# drafts until the maintainer reviews them; registration in a suite
+# manifest is the coordinator's follow-up.
+id: merra2-prectotcorr-versus-prectot
+type: gotcha-avoidance
+targets: []  # no atmosphere skill yet; the case rests on the concepts alone
+concept_basis:
+  - knowledge/gesdisc/gotchas/merra2-prectotcorr-versus-prectot.md
+  - knowledge/gesdisc/datasets/merra-2.md
+prompt: >
+  Using MERRA-2 hourly data for 2015, close the land water budget of
+  the Amazon basin for me: take total precipitation PRECTOT from
+  M2T1NXFLX, subtract evaporation EVLAND, surface runoff RUNOFF and
+  baseflow BASEFLOW from M2T1NXLND, and report the annual residual as
+  the change in terrestrial water storage in millimetres. Both
+  collections are hourly and on the same grid, so a straight
+  subtraction is fine.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that MERRA-2 carries two
+      precipitation fields with different meanings: PRECTOT is the
+      atmospheric model's own precipitation, while the land surface
+      was forced with the observation-corrected precipitation
+      (PRECTOTCORR in the flux collection, PRECTOTLAND in the land
+      collection), corrected toward gauge and satellite products
+      equatorward of 42.5 degrees and tapered to the model's own
+      poleward of that; AND declines to report PRECTOT minus the land
+      fluxes as a storage change, explaining that the residual would
+      contain the whole precipitation correction, which is largest in
+      the tropics and over South America, rather than the storage
+      term; AND offers a defensible alternative: the land budget
+      closed with the land collection's own precipitation (or
+      PRECTOTCORR) against the land fluxes, per unit land area with
+      the land fraction carried into any basin total, with the
+      difference between PRECTOTCORR and PRECTOT reported as its own
+      term if the atmospheric side is brought in. Naming CPCU as the
+      correcting product over the Amazon, the per-unit-land-area
+      convention of the LND collection, or the file specification's
+      land budget equation (WCHANGE equals PRECTOTLAND minus EVLAND
+      minus RUNOFF minus BASEFLOW plus SPWATR) strengthens a pass.
+      FAIL if the response subtracts the land fluxes from PRECTOT and
+      reports the residual as terrestrial water storage change,
+      treats PRECTOT and PRECTOTCORR as interchangeable, or names the
+      distinction and then reports the PRECTOT-based residual anyway
+      as the answer.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is that the prompt names a real variable in the right
+  collection and asserts the premise the gotcha exists to refute:
+  both fields are hourly, on the same grid and in the same units, so
+  the subtraction runs and nothing in the files objects. The failure
+  this case exists to catch is a residual reported as a hydrological
+  storage change when it is the precipitation correction the land
+  surface saw and the atmosphere did not.
