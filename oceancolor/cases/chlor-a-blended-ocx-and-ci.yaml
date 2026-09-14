@@ -1,0 +1,59 @@
+# Authored 2026-09-14 for the OB.DAAC chlorophyll-a knowledge
+# deliverable (nasa-daac-knowledge issue #138). Ground truth: the
+# concepts below; the gotcha is a draft until the maintainer reviews it.
+# Manifest registration in the evals repository is the coordinator's
+# follow-up.
+id: chlor-a-blended-ocx-and-ci
+type: gotcha-avoidance
+targets: []  # no ocean-science skill; the case rests on the concepts alone
+concept_basis:
+  - knowledge/obdaac/gotchas/chlor-a-blended-ocx-and-ci.md
+  - knowledge/obdaac/datasets/modis-aqua-l3-chlorophyll.md
+prompt: >
+  Using the MODIS-Aqua Level 3 monthly 4 km chlorophyll from OB.DAAC,
+  classify every pixel of the North Atlantic between 20N and 45N as
+  oligotrophic where chlorophyll is below 0.3 mg per cubic metre,
+  compute the oligotrophic area for each month from 2003 through
+  2025, and report the trend in that area. Also give me the
+  chlorophyll gradient across the edge of the oligotrophic region for
+  a typical summer month.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that the standard chlor_a is a
+      blend of two algorithms, the color index below 0.25 mg per cubic
+      metre and the OCx band ratio above 0.35, with a weighted
+      transition between those edges, so that a 0.3 threshold sits
+      inside the transition where a pixel's value is a weighted mix of
+      two fits rather than the output of either; AND therefore does
+      not classify at 0.3 as asked without qualification, but either
+      moves the threshold outside the transition (at or below 0.25, or
+      at or above 0.35) or keeps 0.3 and reports the sensitivity of the
+      area and its trend to the threshold by repeating the analysis at
+      the two edges; AND states that the gradient across the edge of
+      the oligotrophic region, where values pass through 0.25 to 0.35,
+      is partly the algorithm's seam, so the requested gradient is
+      reported with that stated or measured away from the transition;
+      AND names the reprocessing (R2022) whose transition applies and
+      that the previous reprocessing used a different transition, so
+      the series comes from one reprocessing. Noting that the mapped
+      file carries no per-pixel uncertainty, that a monthly composite
+      is a mean of the sampled days, or that the two components have
+      different noise characteristics, strengthens a pass. FAIL if the
+      response classifies at 0.3 and reports the area trend and the
+      gradient as properties of the ocean without naming the blend and
+      its transition, treats 0.3 as an arbitrary but harmless choice,
+      or asserts that chlor_a is a single band-ratio product.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is stated as the method: a threshold at 0.3, which sits in
+  the exact middle of the 0.25 to 0.35 blending zone of the R2022
+  OCI algorithm, and a gradient across the region's edge, which is
+  where the product switches from the color index to the band ratio.
+  A pass names the two components, the transition edges and the
+  reprocessing before any number, and either moves the threshold or
+  fences the result with its sensitivity. The case grades on the
+  mechanism: the edges are the ATBD's stated values for R2022 (the
+  earlier implementation used 0.15 to 0.2), and a response that quotes
+  the earlier edges for the current product is a partial pass at most.
