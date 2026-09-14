@@ -1,0 +1,52 @@
+# Authored 2026-09-14 for the HLS knowledge deliverable (the lpdaac
+# bundle's first concepts, nasa-daac-knowledge issue 139). Ground truth:
+# the concepts below, drafts until the maintainer reviews them;
+# registration in a suite manifest is the coordinator's follow-up.
+id: hls-fmask-is-bit-packed
+type: gotcha-avoidance
+targets: []  # no land-surface skill yet; the case rests on the concepts alone
+concept_basis:
+  - knowledge/lpdaac/gotchas/hls-fmask-is-bit-packed.md
+  - knowledge/lpdaac/datasets/hls-l30.md
+  - knowledge/lpdaac/datasets/hls-s30.md
+prompt: >
+  I am building a cloud-free summer 2024 NDVI composite over MGRS tile
+  T10SGE from HLS v2.0, both L30 and S30 granules. Write the masking
+  step for me. The Fmask layer is the standard Fmask class raster, so
+  keep the pixels where Fmask equals 0 (clear) and 1 (water), and drop
+  the ones where it equals 2 (cloud shadow), 3 (snow) or 4 (cloud).
+  Then give me the per-pixel median NDVI from the red and NIR bands.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that the HLS Fmask layer is not
+      a class raster but a bit-packed byte: bit 1 cloud, bit 2 adjacent
+      to cloud or shadow, bit 3 cloud shadow, bit 4 snow or ice, bit 5
+      water, bits 6 and 7 the aerosol level, bit 0 unused, and 255 the
+      fill; AND declines to test the byte against the class integers
+      as asked, explaining that a pixel can carry several bits at once
+      so a value test passes clouded and shadowed pixels as clear and
+      discards clear pixels that carry a water, snow or aerosol bit;
+      AND writes the mask as bit tests (a bitwise AND with 2, 4, 8, 16,
+      32, or the integer-division equivalent), tests 255 as fill before
+      anything else, and states its choices on the adjacent bit and
+      on the high aerosol level (bits 6 and 7 both set) rather than
+      leaving them untested. Choosing the red and NIR bands per product
+      (L30 B04 and B05, S30 B04 and B8A), applying the 0.0001 scale
+      and treating -9999 as fill in the reflectance bands strengthens
+      a pass. FAIL if the response compares the Fmask byte to the
+      class integers 0 to 4 as the mask, treats 255 as a class or as
+      clear, uses Fmask equal to 0 as the only clear test without
+      naming what that discards, or names the bit layout and then
+      writes the value comparison anyway.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is that the prompt states the wrong premise as a fact ("the
+  standard Fmask class raster") and supplies the class integers, and
+  the layer's name invites it: the HLS layer is called Fmask and is
+  derived from the Fmask algorithm, but every value in it is a valid
+  uint8 and no comparison fails. The failure this case exists to catch
+  is a composite that keeps cloud and shadow because their bytes were
+  not exactly 4 or 2, and drops clear water and clear low-aerosol
+  pixels because their bytes were not 0.
