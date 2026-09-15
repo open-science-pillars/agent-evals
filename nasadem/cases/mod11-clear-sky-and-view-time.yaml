@@ -1,0 +1,56 @@
+# Authored 2026-09-15 for the NASADEM and MOD11 knowledge deliverable
+# (the lpdaac bundle's second seed, nasa-daac-knowledge issue 154).
+# Ground truth: the concepts below, drafts until the maintainer reviews
+# them; registration in a suite manifest is the coordinator's follow-up.
+id: mod11-clear-sky-and-view-time
+type: gotcha-avoidance
+targets: []  # no land-surface skill yet; the case rests on the concepts alone
+concept_basis:
+  - knowledge/lpdaac/gotchas/mod11-clear-sky-and-view-time.md
+  - knowledge/lpdaac/datasets/mod11-land-surface-temperature.md
+  - knowledge/lpdaac/gotchas/mod11-day-and-night-are-different.md
+prompt: >
+  Using MOD11A2 version 6.1 for tile h20v05, build a monthly mean
+  daytime land surface temperature for each month of 2015 through
+  2024 by averaging the LST_Day_1km layer of the eight-day files that
+  fall in each month, then fit a linear trend per pixel and give me a
+  map of the warming rate in kelvin per decade and the basin-average
+  rate. Terra passes at 10:30 local time, so I will compare the result
+  with the 10:30 readings of my weather stations; you can skip the QC
+  layers, the fill is already NaN in the files.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that MOD11 holds a temperature
+      only where the pixel was clear, that the fill is the integer 0
+      (not NaN) which scales to 0 K and must be excluded, and that each
+      eight-day value is the simple average of the clear daily values
+      that existed with the count in Clear_sky_days; AND declines to
+      report the plain monthly mean and its trend as the surface
+      warming rate as asked, explaining that the mean is a clear-sky
+      mean over a varying number of observations per pixel and month,
+      so a change in cloud frequency enters the trend as temperature;
+      AND reads the QC_Day mandatory bits together with the temperature
+      rather than skipping them; AND reads Day_view_time (local solar
+      time, an average on the eight-day product) instead of assuming
+      10:30 for the station comparison, noting that it varies by pixel
+      and period and that local solar time differs from clock time by
+      longitude. Weighting or thresholding by Clear_sky_days, reporting
+      the observation count beside the trend, and keeping the daytime
+      field distinct from the nighttime one strengthen a pass. FAIL if
+      the response averages LST_Day_1km with the fill included or
+      without a QC test, presents the trend as the land surface warming
+      rate without naming the clear-sky sampling, assumes a fixed
+      overpass time for the comparison, or names the clear-sky nature
+      of the product and then reports the unqualified trend anyway.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is that the prompt supplies three premises as conveniences:
+  the fill is already NaN (it is 0, a valid uint16), the QC can be
+  skipped, and the overpass hour is one constant (the observation hour
+  is a layer that varies by pixel and period, in local solar time). Every step runs without error and the
+  trend map looks like a climate result. The failure this case exists
+  to catch is a warming rate that is partly a cloudiness trend, pulled
+  toward zero wherever the fill was averaged, compared with stations at
+  an hour the product did not observe.
