@@ -1,0 +1,65 @@
+# Authored 2026-09-15 for the ornldaac GEDI biomass knowledge deliverable
+# (nasa-daac-knowledge issue 155). Ground truth: the concepts below;
+# the footprint gotcha is a draft until the maintainer reviews it.
+id: gedi-footprint-is-not-a-pixel
+type: gotcha-avoidance
+targets: []  # no land or biomass skill named; the case rests on the concepts alone
+concept_basis:
+  - knowledge/ornldaac/gotchas/gedi-footprint-is-not-a-pixel.md
+  - knowledge/ornldaac/datasets/gedi-l4a-footprint-biomass.md
+  - knowledge/ornldaac/datasets/gedi-l4b-gridded-biomass.md
+prompt: >
+  I have all the GEDI L4A Version 3 granules that cross my 40 km by
+  40 km forest concession for 2019 through 2025, with agbd for every
+  shot. Make me a wall-to-wall biomass map of the concession by
+  rasterizing the footprint agbd values to a 25 m grid and filling
+  the gaps by nearest neighbour, then give me the concession's mean
+  biomass density as the average of the footprints inside the
+  boundary and its total biomass stock as that average times the
+  concession area. The footprints are 25 m pixels, so the raster is
+  the map at the product's own resolution.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that a GEDI footprint is a
+      sample and not a pixel: the L4A values are about 25 m spots
+      spaced about 60 m along track on eight transects about 600 m
+      apart, on tracks placed by the station's orbit, pointing and
+      cloud, so the surface between the tracks was never observed and
+      the sampled fraction of the concession is small and uneven; AND
+      declines to present the rasterized and gap-filled surface as a
+      wall-to-wall map at 25 m or the plain footprint average as the
+      concession's biomass density, explaining that the average is a
+      sample mean of a modeled quantity from a clustered sample with
+      no design behind it and that the stock as average times area
+      carries neither the sampling error nor the model error; AND
+      offers a defensible alternative: the L4B 1 km product with its
+      cell means, standard errors, track and footprint counts and
+      mode of inference for the cells the concession covers, or a
+      hybrid estimate at the concession scale with the ground tracks
+      as clusters and the L4A model_data covariance as the model
+      component, in either case with the standard error stated
+      beside the mean and the number of tracks and footprints it
+      rests on. Applying the L4A quality flags (l2a_quality_flag_rel3
+      and l4a_quality_flag_rel3, plus degrade_include_flag and
+      elev_highestreturn_outlier_flag for a gridded use) before any
+      aggregation, and naming that a surface between the tracks
+      would be a separate model of its own, strengthen a pass. FAIL
+      if the response builds or endorses the gap-filled 25 m raster
+      as the concession's biomass map, reports the footprint average
+      or the average-times-area stock as the concession's estimate
+      without a standard error and the sample behind it, treats the
+      footprint count as if it were an areal coverage, or asserts
+      that the footprints are pixels at the product's resolution.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is that the prompt states the premise the gotcha exists to
+  refute: the footprint file reads like a point dataset with a value
+  at every location it holds, so rasterizing, filling and averaging
+  all run without complaint and the result looks like a map. The
+  failure this case exists to catch is a stock or a density for an
+  area reported from footprint arithmetic as if the area had been
+  observed, when the product family puts that inference in L4B with
+  a standard error and leaves cells with fewer than two tracks
+  unestimated.
