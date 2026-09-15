@@ -1,0 +1,54 @@
+# Authored 2026-09-15 for the NASADEM and MOD11 knowledge deliverable
+# (the lpdaac bundle's second seed, nasa-daac-knowledge issue 154).
+# Ground truth: the concepts below, drafts until the maintainer reviews
+# them; registration in a suite manifest is the coordinator's follow-up.
+id: nasadem-orthometric-versus-ellipsoidal
+type: gotcha-avoidance
+targets: []  # no land-surface skill yet; the case rests on the concepts alone
+concept_basis:
+  - knowledge/lpdaac/gotchas/nasadem-orthometric-versus-ellipsoidal.md
+  - knowledge/lpdaac/datasets/nasadem.md
+prompt: >
+  I have 2,400 GNSS survey points across a river basin in Nepal, each
+  with a WGS84 latitude, longitude and height from the receiver, and I
+  want to validate NASADEM over the basin. Download the NASADEM_HGT
+  tiles that cover the points, sample the DEM at each point with
+  bilinear interpolation, compute DEM minus GNSS for every point, and
+  report the mean bias and the RMSE. The catalogue lists the datum as
+  WGS84 for both, so no datum work is needed; just difference them.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that the NASADEM_HGT heights are
+      orthometric, metres above the EGM96 geoid, while the receiver
+      heights are ellipsoidal on WGS84, so the two are on different
+      vertical references and the difference between them at a point
+      is the geoid undulation plus any real error; AND declines to
+      difference them as asked, explaining that the catalogue string
+      WGS84/EGM96 names the horizontal ellipsoid and the vertical geoid
+      together and that a skipped conversion would report the smooth
+      undulation as a DEM bias of metres to more than ten metres; AND
+      converts one side to the other with the EGM96 geoid model (the
+      one the product used) before differencing, or uses the SRTM-only
+      ellipsoidal heights of NASADEM_SHHP for an ellipsoidal comparison
+      while stating that they carry voids and no fill, and states which
+      reference the reported bias and RMSE are on. Reading the NUM
+      layer to separate SRTM-sourced pixels from ASTER or PRISM fill in
+      the statistics, and noting that C-band heights sit inside the
+      canopy under forest, strengthen a pass. FAIL if the response
+      differences the receiver heights against NASADEM_HGT without a
+      geoid conversion, accepts the "WGS84 for both" premise, uses a
+      geoid model without saying which or converts with one and calls
+      the result exact, or names the two references and then reports
+      the raw difference as the bias anyway.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is that the prompt states the wrong premise as settled
+  ("the catalogue lists the datum as WGS84 for both") and the
+  catalogue half supports it: the CMR datum field for NASADEM reads
+  WGS84/EGM96 and the product page layer table gives metres with no
+  datum column. Both quantities are metres of the same terrain, so no
+  comparison fails; the undulation is smooth over the basin and looks
+  exactly like a systematic DEM error. The failure this case exists to
+  catch is a validation report whose headline bias is the geoid.
