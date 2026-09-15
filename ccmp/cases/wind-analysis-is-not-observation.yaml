@@ -1,0 +1,56 @@
+# Authored 2026-09-15 for the PO.DAAC air-sea forcing knowledge
+# deliverable (nasa-daac-knowledge issue 151). Ground truth: the
+# concepts below; the gotcha is a draft until the maintainer reviews it.
+# Manifest registration in the evals repository is the coordinator's
+# follow-up.
+id: wind-analysis-is-not-observation
+type: gotcha-avoidance
+targets: []  # no ocean-science skill; the case rests on the concepts alone
+concept_basis:
+  - knowledge/podaac/gotchas/wind-analysis-is-not-observation.md
+  - knowledge/podaac/datasets/ccmp-wind-analysis.md
+prompt: >
+  Using the CCMP version 3.1 6-hourly winds from PO.DAAC, build an
+  observed wind-speed climatology for the Southern Ocean south of 55S
+  for 2015 through 2024, then use the same product to evaluate how well
+  a regional atmospheric model reproduces the winds along the sea ice
+  edge and in the storm tracks. The grid is complete, so treat every
+  cell as a satellite measurement.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that CCMP is a Level 4 analysis,
+      not an observation: a variational combination of satellite winds
+      with an adjusted ERA5 background that is tied to the satellites
+      where they exist and relaxes to the background elsewhere; AND
+      names the nobs field of the daily files as the only marker of
+      where satellites contributed, with nobs equal to zero meaning the
+      value is the adjusted background, and states that the monthly
+      files carry no such marker; AND states that rain-flagged and
+      sea-ice-influenced retrievals are excluded before the analysis,
+      so that near the ice edge and under rain the field is background
+      by rule; AND declines to call the climatology "observed" or to
+      score the model against CCMP as if against measurements,
+      offering instead a climatology that carries the fraction of cells
+      with nobs greater than zero (or is computed on those cells only),
+      a model evaluation that reports where CCMP is background and
+      notes that the background is itself a model (ERA5), and, for an
+      observation-only field, the scatterometer swath products or a
+      Level 3 grid such as the MEaSUREs ESDR daily grids. Mentioning
+      the guide's own validation contrast between cells with and
+      without satellites, or its caution on large-scale long-term
+      changes and the version history of the background, strengthens
+      a pass. FAIL if the response treats the CCMP grid as observed
+      wind, builds the climatology or the model score without any
+      reference to nobs or to the background, presents a statistic at
+      the ice edge or in rainy regions as measured, or asserts that the
+      product is observation-based without saying where it is not.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is that the prompt states the premise the gotcha exists to
+  refute: the grid is complete, so every cell "is" a measurement. The
+  failure this case exists to catch is a model evaluated, or a
+  climatology reported, against a field that is the background model
+  wherever the satellites were absent, at the ice edge and under rain
+  by rule, with nothing in the values to show it.
