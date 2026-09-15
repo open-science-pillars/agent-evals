@@ -1,0 +1,71 @@
+# Authored 2026-09-15 for the MODIS vegetation knowledge deliverable
+# (the lpdaac bundle's third seed, nasa-daac-knowledge issue 159).
+# Ground truth: the concepts below, drafts until the maintainer reviews
+# them; registration in a suite manifest is the coordinator's follow-up.
+id: index-is-not-a-state-variable
+type: gotcha-avoidance
+targets: []  # no land-surface skill yet; the case rests on the concepts alone
+concept_basis:
+  - knowledge/lpdaac/gotchas/index-is-not-a-state-variable.md
+  - knowledge/lpdaac/datasets/mod13-vegetation-indices.md
+  - knowledge/lpdaac/datasets/mod15-lai-fpar.md
+prompt: >
+  Using MOD13A1 version 6.1 for tile h12v04, take the 16-day NDVI
+  layer for every period of 2003 through 2023, average the July
+  periods per pixel per year, and fit a per-pixel linear trend. Report
+  the trend as the percentage change in vegetation per decade
+  (trend divided by the 2003 mean, times ten), and give me a map of it
+  together with a tile-wide biomass change estimate using the
+  NDVI-to-biomass regression from my grassland field plots, applied
+  to every pixel. The forest pixels come out nearly flat, so you can
+  label those "no change". Where NDVI is above 0.9 use EVI instead so
+  the numbers stay comparable across the tile.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that NDVI is an empirical index
+      of red and near-infrared contrast and not a measure of leaf
+      area, biomass or green cover: that it is a non-linear stretch of
+      the NIR to red ratio that compresses toward a ceiling over dense
+      canopy (insensitive to leaf area above about 2 or 3), so a
+      percentage change of the index is not a percentage change of
+      vegetation and a flat forest series does not establish an
+      unchanged canopy; AND declines to apply the grassland
+      NDVI-to-biomass regression across the tile as asked, explaining
+      that the relation is site and cover-type specific, that
+      background, leaf angle and clumping move the index independently
+      of biomass, and that the forest pixels lie where the index has
+      stopped responding; AND declines to substitute EVI for NDVI
+      above a threshold to keep numbers comparable, explaining that
+      EVI is a different quantity with its own coefficients and a
+      two-band fallback over bright surfaces that no quality bit
+      marks, so mixing the two attributes their formula difference to
+      vegetation; AND offers a defensible alternative: the index
+      reported as an index (a change in NDVI units, per cover type,
+      with the pixel reliability and aerosol, snow and shadow bits
+      applied and the fill -3000 excluded), and the MOD15A2H leaf area
+      index or FPAR, with its standard deviation layer and its SCF_QC
+      algorithm path flag, used where a state variable is needed, with
+      saturated retrievals labelled as such. Reading the composite day
+      of the year layer as the time coordinate rather than the period
+      date, and keeping any biophysical relation restricted to the
+      cover type and season it was calibrated for, strengthen a pass.
+      FAIL if the response reports the NDVI trend as a percentage
+      change in vegetation or biomass, applies the grassland regression
+      tile-wide, labels the forest pixels as unchanged on the flat
+      index alone, blends EVI into the NDVI series, or names the
+      saturation and then delivers the requested numbers unqualified
+      anyway.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is that the prompt supplies four premises as conveniences:
+  that a relative change of the index is a relative change of
+  vegetation, that one field regression converts the index to biomass
+  everywhere, that a flat index over forest means an unchanged forest,
+  and that EVI can stand in for NDVI where NDVI is high. Every value
+  is inside the valid range, every step runs, and the map looks like a
+  vegetation change product. The failure this case exists to catch is
+  a biomass change reported from an index that had stopped responding
+  where the biomass is, with the forest labelled stable because the
+  index saturated.
