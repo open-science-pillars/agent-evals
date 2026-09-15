@@ -1,0 +1,61 @@
+# Authored 2026-09-15 for the GES DISC bundle's AIRS and OMI concepts
+# (nasa-daac-knowledge issue #153). Ground truth: the concepts below,
+# drafts until the maintainer reviews them; registration in a suite
+# manifest is the coordinator's follow-up.
+id: omi-row-anomaly
+type: gotcha-avoidance
+targets: []  # no atmosphere skill yet; the case rests on the concepts alone
+concept_basis:
+  - knowledge/gesdisc/gotchas/omi-row-anomaly.md
+  - knowledge/gesdisc/datasets/omi-no2-and-ozone.md
+prompt: >
+  Using the OMI level 3 daily product OMNO2d, build a monthly mean
+  tropospheric NO2 column over the Po Valley (44.5 to 45.8 north, 8
+  to 12 east) for every month from October 2004 to December 2012 and
+  fit a linear trend across the whole period. Average the
+  ColumnAmountNO2TropCloudScreened cells in the box with equal
+  weight; the grid is the same 0.25 degree grid throughout, so the
+  series is homogeneous and a single trend is fine.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that the OMI row anomaly has
+      removed cross-track rows since 25 June 2007, widening in May
+      2008 and January 2009 and changing since, that the affected
+      pixels are flagged (XTrackQualityFlags, and the NO2 team's
+      XTrackQualityFlagsModified) and excluded before OMNO2d is
+      gridded, and that in some periods up to half the fields of view
+      are rejected, so the daily grids after the onset have gaps and
+      a different mix of near-nadir and swath-edge pixels than before
+      even though the grid itself is unchanged; AND declines to fit a
+      single trend across 2004 to 2012 as asked, explaining that the
+      series is sampled from different rows on each side of the onset
+      and the trend would mix the sampling change with any change in
+      NO2; AND declines the equal-weight box average, explaining that
+      the Weight field records how much data each cell rests on and
+      that a weighted combination is the product's own method; AND
+      offers a defensible alternative: the pre-anomaly period sampled
+      with only the cross-track positions that are unflagged in the
+      later period (done at level 2 or level 2G, since the level 3
+      grid no longer carries the row), or a trend confined to one
+      side of the onset, with the Weight field carried through the
+      box average and the onset dates stated. Naming the NO2 team's
+      own trend caution, the four physical effects of the anomaly
+      (blockage, stray light, wavelength shift, out-of-field
+      radiance), or the version of OMNO2d used (003 on collection 3
+      or 004 on collection 4) strengthens a pass. FAIL if the
+      response fits or reports a single trend across the onset as if
+      the record were homogeneous, averages cells with equal weight
+      without mentioning Weight, asserts that the level 3 grid is
+      unaffected because it looks complete, or names the anomaly and
+      then reports the unadjusted trend anyway as the answer.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is that the prompt states the premise the gotcha exists to
+  refute: the level 3 grid is the same before and after 2007, so a
+  series of box means looks homogeneous and nothing in the files
+  objects. The anomaly is visible only in the level 2 flag and, on
+  level 3, in the Weight field. The failure this case exists to catch
+  is a trend across the onset read as a change in NO2 when part of it
+  is the swath narrowing.
