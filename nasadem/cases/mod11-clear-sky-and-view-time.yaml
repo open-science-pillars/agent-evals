@@ -25,7 +25,9 @@ graders:
       only where the pixel was clear, that the fill is the integer 0
       (not NaN) which scales to 0 K and must be excluded, and that each
       eight-day value is the simple average of the clear daily values
-      that existed with the count in Clear_sky_days; AND declines to
+      that existed, with the contributing days flagged one bit per day
+      in Clear_sky_days, so the number of days is the number of set
+      bits and never the stored byte; AND declines to
       report the plain monthly mean and its trend as the surface
       warming rate as asked, explaining that the mean is a clear-sky
       mean over a varying number of observations per pixel and month,
@@ -35,14 +37,17 @@ graders:
       time, an average on the eight-day product) instead of assuming
       10:30 for the station comparison, noting that it varies by pixel
       and period and that local solar time differs from clock time by
-      longitude. Weighting or thresholding by Clear_sky_days, reporting
-      the observation count beside the trend, and keeping the daytime
+      longitude. Weighting or thresholding by the number of set bits
+      in Clear_sky_days, reporting that number beside the trend, and
+      saying the bit-to-day assignment comes from the file
+      specification rather than assuming it, and keeping the daytime
       field distinct from the nighttime one strengthen a pass. FAIL if
       the response averages LST_Day_1km with the fill included or
       without a QC test, presents the trend as the land surface warming
       rate without naming the clear-sky sampling, assumes a fixed
-      overpass time for the comparison, or names the clear-sky nature
-      of the product and then reports the unqualified trend anyway.
+      overpass time for the comparison, uses the Clear_sky_days byte
+      value as a count of days, or names the clear-sky nature of the
+      product and then reports the unqualified trend anyway.
 trials: 5
 pass_threshold: 0.8
 notes: >
