@@ -1,0 +1,66 @@
+# Authored 2026-09-15 for the GES DISC bundle's AIRS and OMI concepts
+# (nasa-daac-knowledge issue #153). Ground truth: the concepts below,
+# drafts until the maintainer reviews them; registration in a suite
+# manifest is the coordinator's follow-up.
+id: airs-pressure-levels-and-surface-mask
+type: gotcha-avoidance
+targets: []  # no atmosphere skill yet; the case rests on the concepts alone
+concept_basis:
+  - knowledge/gesdisc/gotchas/airs-pressure-levels-and-surface-mask.md
+  - knowledge/gesdisc/datasets/airs-l3-temperature-humidity.md
+prompt: >
+  Using the AIRS version 7 level 3 monthly product AIRS3STM for
+  July 2019, give me the mean 925 hPa temperature and the mean 925
+  hPa water vapour mixing ratio over the Tibetan Plateau (28 to 38
+  north, 78 to 100 east) from the ascending grid, and also the
+  column water vapour over the same box, which I will get by summing
+  the H2O_MMR_Lyr_A layers and converting to kg per square metre.
+  The product is a complete 1 degree grid with 24 temperature levels
+  and 12 water vapour layers in every cell, so a straight box average
+  at the 925 hPa index and a straight sum over the layers are fine.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that the AIRS level 3 levels
+      are fixed pressure levels, the same in every cell, and that
+      over the Tibetan Plateau the 925 hPa level (and 1000 hPa, and
+      for much of the box 850 hPa) lies below the ground, so that the
+      per-level count Temperature_A_ct and H2O_MMR_A_ct is zero or
+      near zero there while TotalCounts_A is not, and the cells read
+      as fill; AND declines to report a plain box average at 925 hPa
+      as the plateau's temperature or humidity, explaining that it
+      would be a mean over the few low-lying cells that reach that
+      pressure and a sampling artefact of the terrain rather than a
+      property of the air; AND declines to build the column by
+      summing H2O_MMR_Lyr_A, explaining that the layer product
+      assumes an atmosphere down to 1000 hPa and extends below the
+      surface so the sum exceeds the column, and that TotH2OVap_A is
+      the product's own column; AND offers a defensible alternative:
+      a mask by SurfPres_Forecast_A (or by the per-level count
+      against TotalCounts_A) with the fraction of the box that
+      entered the mean stated, the surface fields (SurfAirTemp_A,
+      H2O_MMR_Surf_A) for a near-surface quantity over the plateau,
+      TotH2OVap_A for the column, and any layer integral limited to
+      layers above the surface pressure with the guide's partial
+      correction named. Naming the guide's sections on unequal
+      numbers of samples due to topography and on the difference
+      between TotH2OVap and the layer integral, or noting that the
+      same mask question arises against MERRA-2, whose below-ground
+      pressure-level points are undefined, strengthens a pass. FAIL
+      if the response reports a plain 925 hPa box mean as the plateau
+      value, sums the layers into a column without removing the
+      below-surface part or without stating that it exceeds
+      TotH2OVap, treats fill or count-zero cells as missing weather
+      data rather than below-ground levels, or names the trap and
+      then reports the unmasked numbers anyway as the answer.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is that the prompt states the premise the gotcha exists to
+  refute: the grid is complete and every cell has every level, so a
+  box mean and a layer sum run without error. Over the plateau the
+  file carries fill and a zero count at the low levels, which a mean
+  silently drops, and a layer integral silently includes air below
+  the ground. The failure this case exists to catch is a low-level
+  regional mean or a layer-summed column reported as if the levels
+  reached the surface everywhere.
