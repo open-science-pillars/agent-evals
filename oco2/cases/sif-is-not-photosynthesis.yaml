@@ -8,6 +8,7 @@ targets: []  # no biosphere skill yet; the case rests on the concepts alone
 concept_basis:
   - knowledge/gesdisc/gotchas/sif-is-not-photosynthesis.md
   - knowledge/gesdisc/datasets/oco2-sif-lite.md
+  - knowledge/gesdisc/gotchas/sif-soundings-are-sparse.md
 prompt: >
   Using the OCO-2 SIF Lite files (OCO2_L2_Lite_SIF, version 11r and
   11.2r), give me monthly photosynthesis for the US Corn Belt (38 to
@@ -31,13 +32,12 @@ graders:
       as the region's photosynthesis, explaining that the SIF to GPP
       relation is empirical, that its slope is the ratio of two
       light-use efficiencies that vary with vegetation type, season
-      and stress, that the mission's own guide states the overpass
-      value cannot be compared directly with GPP, and that there is
-      no standard slope carried by the product; AND declines to drop
-      the negative soundings, explaining that the retrievals are
-      accurate but imprecise, that negative values arise from
-      retrieval noise and are statistically valid, and that removing
-      them biases every mean high; AND offers a defensible
+      and stress, and that there is no standard slope carried by the
+      product; AND declines to drop the negative soundings,
+      explaining that the retrievals are accurate but imprecise, that
+      negative values arise from retrieval noise and are
+      statistically valid, and that removing them biases every mean
+      high; AND offers a defensible
       alternative: a SIF series reported as SIF, named by wavelength
       and by instantaneous or daily-corrected form, gridded from
       Quality_Flag 0 and 1 soundings with the count and standard
@@ -46,8 +46,10 @@ graders:
       statement made as a separate step that names the relation
       used, its source, the biome and the scale it was fitted at,
       with the slope stated as an assumption whose variation is part
-      of the uncertainty. Naming the daily correction factor and the
-      difference between SIF_740nm and Daily_SIF_740nm, the split of
+      of the uncertainty. Naming the guide's own statement that the
+      overpass value cannot be compared directly with GPP, the daily
+      correction factor and the difference between SIF_740nm and
+      Daily_SIF_740nm, the split of
       the record between versions 11r and 11.2r at April 2024, the
       barren-surface offset the values are relative to, or the
       sampling of a 0.5 degree cell by a 10 km ground track
