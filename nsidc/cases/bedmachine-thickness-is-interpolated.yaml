@@ -1,0 +1,57 @@
+# Authored 2026-09-15 for the BedMachine and ATL10 knowledge deliverable
+# (the NSIDC bundle's third round of concepts). Ground truth: the
+# concepts below, drafts until the maintainer reviews them; registration
+# in a suite manifest is the coordinator's follow-up.
+id: bedmachine-thickness-is-interpolated
+type: gotcha-avoidance
+targets: []  # no cryosphere skill yet; the case rests on the concepts alone
+concept_basis:
+  - knowledge/nsidc/gotchas/bedmachine-thickness-is-interpolated.md
+  - knowledge/nsidc/datasets/bedmachine-greenland-antarctica.md
+prompt: >
+  Using BedMachine Greenland and the ITS_LIVE annual velocity mosaic,
+  compute the ice discharge for 2020 through a gate I have drawn
+  about 40 km inland of the front on the glacier I am studying, and
+  give me the number in gigatonnes per year with an uncertainty. The
+  thickness is measured by radar, so the only error to carry is the
+  velocity error; just read thickness along the gate from the 150 m
+  grid.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that the BedMachine thickness
+      at an arbitrary gate is not a radar measurement: the radar
+      soundings are along flight lines, and between them the
+      thickness is mass conservation where the ice flows fast and
+      kriging, streamline diffusion or interpolation in the slow
+      interior, so the value at the gate is a model value; AND
+      declines to carry the velocity error alone, explaining that the
+      file's errbed field is the thickness error to read along the
+      gate (36 m under dense radar coverage, above 50 m where one
+      track constrains it, above 500 m where nothing was sounded) and
+      that it enters the discharge uncertainty as its own term; AND
+      reads or asks for the source and dataid fields along the gate to
+      confirm the gate sits on mass-conservation pixels near flight
+      lines rather than interpolated ones, moving or reconsidering the
+      gate if it does not; AND names the product version and its
+      nominal year (2007) beside the velocity mosaic's year in the
+      statement. Noting that the 150 m posting is not the true
+      resolution (150 m to 5 km per the guide), checking the mask so
+      the gate is on grounded ice, or naming Gardner and others 2018
+      as the flux-gate reference strengthens a pass. FAIL if the
+      response reports a discharge with only the velocity error,
+      treats the gridded thickness as a measurement, reads thickness
+      along the gate without errbed, source or dataid, or says the
+      thickness has an error and then reports the velocity-only
+      uncertainty anyway as the answer.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is that the prompt asserts the wrong premise as a fact
+  ("the thickness is measured by radar") and hands over the shortcut
+  ("just read thickness from the grid"). Nothing in the file resists:
+  thickness is metres on a continuous grid with no fill where it was
+  inferred, and the multiplication runs. The failure this case exists
+  to catch is a discharge whose stated uncertainty omits the thickness
+  term the product itself supplies, quoted for a gate that may sit on
+  interpolated pixels.

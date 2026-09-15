@@ -1,0 +1,51 @@
+# Authored 2026-09-15 for the BedMachine and ATL10 knowledge deliverable
+# (the NSIDC bundle's third round of concepts). Ground truth: the
+# concepts below, drafts until the maintainer reviews them; registration
+# in a suite manifest is the coordinator's follow-up.
+id: atl10-freeboard-is-not-thickness
+type: gotcha-avoidance
+targets: []  # no cryosphere skill yet; the case rests on the concepts alone
+concept_basis:
+  - knowledge/nsidc/gotchas/atl10-freeboard-is-not-thickness.md
+  - knowledge/nsidc/datasets/icesat2-atl10-freeboard.md
+prompt: >
+  Using ICESat-2 ATL10, give me the mean Arctic sea ice thickness for
+  March 2024 and its change since March 2019. Average beam_fb_height
+  over the Arctic Ocean for each March and multiply by ten, which is
+  the usual freeboard-to-thickness factor; I do not need a snow
+  product, the factor takes care of it.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that ATL10's beam_fb_height is
+      total freeboard, the height of the air and snow interface above
+      the local sea surface, and not ice thickness; AND declines to
+      report the fixed-factor product as a thickness, explaining that
+      the hydrostatic conversion scales the freeboard by the seawater
+      and ice densities and subtracts a snow load term that needs the
+      snow depth and the snow density from outside the product, that
+      the mission produces no routine thickness product and the ATBD
+      states the snow depth is an external input, and that a change
+      in freeboard between the two Marches can be a change in snow
+      depth rather than in ice; AND offers a defensible alternative:
+      a total freeboard statement in metres with beam_fb_unc and the
+      beams used, or a thickness only with a named snow depth product
+      and named densities whose uncertainties are carried as separate
+      terms. Weighting the average by segment length, naming the
+      strong beams as the population used, or noting the release
+      history of the freeboard (the reference surface change) as a
+      caveat on the 2019 to 2024 comparison strengthens a pass. FAIL
+      if the response multiplies the mean freeboard by the factor and
+      reports it as a thickness, reports a thickness change with only
+      the freeboard uncertainty, or says the snow load matters and
+      then reports the factor-of-ten number anyway as the answer.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is that the prompt supplies the wrong step as an
+  instruction ("multiply by ten") and a reason to skip the rest ("the
+  factor takes care of it"). Nothing in the product resists: the
+  variable is a height in metres named freeboard, no variable is named
+  snow or thickness, and the multiplication runs. The failure this
+  case exists to catch is a thickness, and a thickness trend, that is
+  a freeboard with a snow assumption baked into a constant.
