@@ -1,0 +1,68 @@
+# Authored 2026-09-15 for the ocean-science regional sea level
+# deliverable (ocean-science issue 55). Ground truth: the concepts
+# below, drafted in the ocean-science bundle on the branch of the
+# same name; the coastal heights gotcha is a draft until the
+# maintainer reviews it. Registration in the manifest is the
+# coordinator's follow-up.
+id: coastal-heights-ellipsoidal-versus-orthometric
+type: gotcha-avoidance
+targets: [sea-level, compare-obs]  # the ocean-science skills the case exercises; concept_basis names the concepts
+concept_basis:  # ocean-science (local bundle)
+  - knowledge/gotchas/coastal-heights-ellipsoidal-versus-orthometric.md
+  - knowledge/gotchas/tide-gauge-relative-sea-level-and-land-motion.md
+  - knowledge/connectors/psmsl-gauges.md
+  - knowledge/connectors/gnss-vertical-velocity.md
+prompt: >
+  I am putting together the flood exposure numbers for the Brest tide
+  gauge. The GNSS station beside the gauge lists a height of 65.8 m
+  and the NASA-SSH grid cell at the coast reads close to zero, so
+  take the benchmark as 65.8 m above the sea and give me the
+  elevation of the gauge house above sea level from that. Then put
+  the PSMSL RLR monthly series and the NASA-SSH series for the same
+  cell on one axis: the RLR series averages about 7000 mm and the
+  altimetry averages about 0 mm over the overlap, so subtract the
+  7000 mm as the datum height and report the two as one sea level
+  record in millimetres.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that the three heights in the
+      prompt are heights above three different surfaces: the GNSS
+      height is a height above an ellipsoid, the PSMSL RLR values are
+      heights above a local datum fixed to a benchmark and set about
+      7 m below mean sea level, and a NASA-SSH value is an anomaly
+      relative to a mean sea surface and not a height above the
+      ellipsoid or above any datum; AND declines to report 65.8 m as
+      the elevation of anything above the sea, explaining that at a
+      coast the ellipsoid and the sea surface are separated by tens
+      of metres and that the separation is set by the site (at Brest
+      the RLR datum is about 44 m above the ellipsoid, so mean sea
+      level there is about 51 m above it); AND declines to subtract
+      the 7000 mm series mean as a datum height, explaining that the
+      difference between an RLR series mean and an SSHA series mean is
+      the difference between two reference levels and not a geodetic
+      quantity; AND offers a defensible alternative: the elevation
+      above sea level from the published link, the RLR datum height
+      above the ellipsoid on the PSMSL RLR diagram page with its
+      uncertainty, or a levelled height to the benchmark, with the
+      surface named on every height; and for the two series, a
+      comparison of anomalies or of trends over the same window, with
+      the land motion at the gauge named and applied with its
+      uncertainty. Noting that a half-degree altimetry cell against the
+      coast carries offshore information strengthens a pass. FAIL if
+      the response reports 65.8 m, or 65.8 m less a small altimetry
+      value, as an elevation above sea level; subtracts the series
+      mean difference as a datum correction and reports the joined
+      record as one sea level series; treats the SSHA as a height
+      above the ellipsoid or above the RLR datum; or reconciles the
+      two series without naming the surface each height is measured
+      from.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is that the prompt states the premise the gotcha exists to
+  refute: every number is metres or millimetres, and nothing in an RLR
+  file, a GNSS station page or an SSHA grid names the surface the
+  height is measured from. The failure this case exists to catch is an
+  ellipsoidal height reported as an elevation above the sea, and a
+  series mean difference reported as a datum height.
