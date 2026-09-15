@@ -1,0 +1,73 @@
+# Authored 2026-09-15 for the GES DISC bundle's OCO-2 solar-induced
+# fluorescence concepts (nasa-daac-knowledge issue #160). Ground truth:
+# the concepts below, drafts until the maintainer reviews them;
+# registration in a suite manifest is the coordinator's follow-up.
+id: sif-is-not-photosynthesis
+type: gotcha-avoidance
+targets: []  # no biosphere skill yet; the case rests on the concepts alone
+concept_basis:
+  - knowledge/gesdisc/gotchas/sif-is-not-photosynthesis.md
+  - knowledge/gesdisc/datasets/oco2-sif-lite.md
+  - knowledge/gesdisc/gotchas/sif-soundings-are-sparse.md
+prompt: >
+  Using the OCO-2 SIF Lite files (OCO2_L2_Lite_SIF, version 11r and
+  11.2r), give me monthly photosynthesis for the US Corn Belt (38 to
+  44 north, 98 to 84 west) for 2018 through 2024 in grams of carbon
+  per square metre per day. Grid the SIF_740nm soundings to 0.5
+  degrees, average the cells over the box each month, and convert
+  to gross primary production with the standard SIF to GPP slope;
+  SIF is the photosynthesis signal, so the converted series is the
+  region's photosynthesis and its year-to-year change is the change
+  in crop productivity. Drop the negative soundings first, since
+  fluorescence cannot be negative.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that the Lite file fields are
+      solar-induced chlorophyll fluorescence radiances, in W per
+      square metre per steradian per micrometre at 757, 771 or a
+      derived 740 nm, and that no field in the product is gross
+      primary production, photosynthesis or light-use efficiency;
+      AND declines to present a SIF series multiplied by one slope
+      as the region's photosynthesis, explaining that the SIF to GPP
+      relation is empirical, that its slope is the ratio of two
+      light-use efficiencies that vary with vegetation type, season
+      and stress, and that there is no standard slope carried by the
+      product; AND declines to drop the negative soundings,
+      explaining that the retrievals are accurate but imprecise, that
+      negative values arise from retrieval noise and are
+      statistically valid, and that removing them biases every mean
+      high; AND offers a defensible
+      alternative: a SIF series reported as SIF, named by wavelength
+      and by instantaneous or daily-corrected form, gridded from
+      Quality_Flag 0 and 1 soundings with the count and standard
+      error of each cell and month, negatives kept with the guide's
+      two- and three-sigma rule for extreme values, and any GPP
+      statement made as a separate step that names the relation
+      used, its source, the biome and the scale it was fitted at,
+      with the slope stated as an assumption whose variation is part
+      of the uncertainty. Naming the guide's own statement that the
+      overpass value cannot be compared directly with GPP, the daily
+      correction factor and the difference between SIF_740nm and
+      Daily_SIF_740nm, the split of
+      the record between versions 11r and 11.2r at April 2024, the
+      barren-surface offset the values are relative to, or the
+      sampling of a 0.5 degree cell by a 10 km ground track
+      strengthens a pass. FAIL if the response reports a GPP or
+      photosynthesis series converted from SIF by an unstated or
+      single slope as the answer, labels a SIF map or series as
+      photosynthesis, drops the negative soundings, reads the
+      year-to-year change of converted SIF as the change in crop
+      productivity without the slope caveat, or names the trap and
+      then reports the converted series anyway as the answer.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is that the prompt states the premise the gotcha exists to
+  refute: SIF is called the photosynthesis signal, a standard slope
+  is assumed to exist, and negative values are called impossible. A
+  gridding and a multiplication run without error and return a
+  series in carbon units. The failure this case exists to catch is a
+  fluorescence radiance presented as a carbon flux, with a slope,
+  a wavelength, an illumination correction and a truncation of the
+  noise hidden inside the number.
