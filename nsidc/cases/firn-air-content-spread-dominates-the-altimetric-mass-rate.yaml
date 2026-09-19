@@ -1,0 +1,65 @@
+# Authored 2026-09-19 for the land-ice knowledge deliverable (the NSIDC
+# bundle's assessment and firn anchors). Ground truth: the concepts
+# below, drafts until the maintainer reviews them; registration in a
+# suite manifest is the coordinator's follow-up.
+id: firn-air-content-spread-dominates-the-altimetric-mass-rate
+type: gotcha-avoidance
+targets: []  # no cryosphere skill yet; the case rests on the concepts alone
+concept_basis:
+  - knowledge/nsidc/gotchas/firn-air-content-spread-dominates-the-altimetric-mass-rate.md
+  - knowledge/nsidc/datasets/firn-model-air-content.md
+  - knowledge/nsidc/gotchas/atl15-height-change-is-not-mass-change.md
+prompt: >
+  I have the ITS_LIVE Greenland elevation change file open and it
+  already carries the firn air content field, so the hard part is done.
+  Subtract dfac_gemb from the height change, multiply by 917, and give
+  me the Greenland ice sheet mass rate for 2003 through 2016 in
+  gigatonnes per year with an uncertainty. The firn field is model
+  output rather than a measurement, so it has no error of its own; take
+  the uncertainty from the elevation change error the file ships. If
+  that is fiddly, an effective column density that already accounts for
+  the firn is fine instead of subtracting the field.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that the firn term carries no
+      usable error in the file and that this makes it the dominant
+      uncertainty rather than a free one: the Greenland product ships
+      no firn error field and its own paper states that firn air
+      content errors are outside its scope and takes the difference
+      between GEMB version 1.3.0 and GSFC-FDM version 1.2.1 as the
+      measure of error, added in quadrature to the volume error before
+      the ice density is applied; AND declines to quote the mass rate
+      with the elevation change error alone, explaining that the
+      stated interval would omit the term that sets it; AND declines
+      the effective-density shortcut, explaining that the firn
+      contribution changes sign inside the record so a single density
+      fixes its sign for the whole series; AND offers a defensible
+      alternative: subtract the firn air content change with the model
+      and version named, carry the two-model spread as a term of its
+      own beside the propagated elevation error, and state the sign and
+      size of the firn contribution over the window, noting that the
+      firn rate's own interval can cross zero. Naming the domain and
+      sampling of the firn run, the absence of a stated forcing for the
+      Greenland GEMB run, or the fact that the published mass change is
+      the mean of the two models strengthens a pass. FAIL if the
+      response reports a mass rate whose uncertainty is the elevation
+      error alone, adopts an effective density in place of the firn
+      subtraction, calls the two-model spread a formal or measurement
+      error without saying it is a spread between named models, or
+      asserts the firn term is small enough to neglect over this
+      window.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is that the prompt supplies the wrong reasoning as a
+  premise: because the firn field is model output it is treated as
+  error-free, which inverts the real situation, where it is the one
+  term with no measurement error and the widest spread. The second
+  invitation, an effective density, is the shortcut the absence of an
+  error field encourages and it silently fixes the sign of a
+  correction that changes sign inside the record. The failure this
+  case exists to catch is a gigatonne rate with a confident narrow
+  interval that omits the firn spread, offered for comparison against
+  gravimetry or a published assessment, where the missing term is
+  exactly what the comparison is testing.
