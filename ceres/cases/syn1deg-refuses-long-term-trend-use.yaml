@@ -1,0 +1,63 @@
+# Authored 2026-09-19 for the synoptic radiation knowledge deliverable
+# (the ASDC bundle's SYN1deg concepts). Ground truth: the concepts
+# below, drafts until the maintainer reviews them; registration in a
+# suite manifest is the coordinator's follow-up.
+id: syn1deg-refuses-long-term-trend-use
+type: gotcha-avoidance
+targets: []  # no atmosphere skill yet; the case rests on the concepts alone
+concept_basis:
+  - knowledge/asdc/gotchas/syn1deg-refuses-long-term-trend-use.md
+  - knowledge/asdc/datasets/ceres-syn1deg.md
+prompt: >
+  The CERES SYN1deg monthly collection runs from March 2000 to the
+  present with no gaps in the catalog, and it is the only CERES product
+  with hourly surface fluxes, so it is the one I want. Fit a linear
+  trend to the global mean surface net longwave irradiance and to the
+  Arctic mean surface downward longwave irradiance over 2001 through
+  2023, deseasonalized, and tell me whether the surface greenhouse
+  effect is strengthening and whether the Arctic is leading.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that the product's own data
+      quality summary states that SYN1deg should not be used to infer
+      long-term trends of clouds or fluxes and is not of climate
+      quality, and repeats the point in its computed flux cautions by
+      advising against trend studies; AND establishes that the two
+      trends asked for are ones the documentation has already
+      attributed to the inputs, the decreasing global surface net
+      longwave anomaly trend to the higher cloud bases retrieved by the
+      newer geostationary imagers as they replaced the older ones, and
+      the decreasing polar downward and net longwave anomaly trends to
+      the degradation of the Terra water vapor channel from about 2008,
+      so a fitted trend of the expected sign is not evidence of the
+      physics asked about; AND declines to report the fitted trends as
+      a geophysical result; AND offers the alternatives the summary
+      names, EBAF-TOA and EBAF-Surface for long-term flux variability
+      and trending, whose regional climatology adjustments over the
+      satellite overlap periods exist for that purpose, and SSF1deg
+      for regional cloud property trends with the absence of the
+      diurnal cycle stated as the price. Naming that the record changes
+      from Terra and Aqua to NOAA-20 with the MERRA-2 atmosphere in
+      April 2022 with no in-product climatology adjustment to absorb
+      it, that a change in mean cloud properties is expected wherever a
+      geostationary domain is crossed in time or space, that key inputs
+      changed at various times during the record, or that the summary
+      sanctions no window over which a trend from this product stands,
+      strengthens a pass. FAIL if the response reports either trend as
+      a result, reports the trends with a caveat attached and answers
+      the greenhouse or Arctic question from them anyway, treats the
+      catalog's unbroken temporal extent as evidence that the record is
+      fit for trends, or attributes the documented artifact trends to
+      physics.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is that the prompt's premise is true in every checkable
+  respect: the four Edition4B collections do begin 2000-03-01 with no
+  end date, and SYN1deg is the only CERES product carrying hourly
+  surface fluxes, so the user's reason for choosing it is sound and
+  the refusal lives only in the documentation. The failure this case
+  exists to catch is a surface greenhouse trend, or an Arctic
+  amplification claim, read off a product whose own summary attributes
+  a trend of that sign to its imagers.
