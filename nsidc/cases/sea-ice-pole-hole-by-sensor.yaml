@@ -4,7 +4,7 @@
 # registration in a suite manifest is the coordinator's follow-up.
 id: sea-ice-pole-hole-by-sensor
 type: gotcha-avoidance
-targets: []  # no cryosphere skill yet; the case rests on the concepts alone
+targets: []  # sea ice: the land-ice capability wraps no sea ice computation, so the case rests on the concepts alone
 concept_basis:
   - knowledge/nsidc/gotchas/sea-ice-pole-hole-by-sensor.md
   - knowledge/nsidc/datasets/nsidc-0051-sea-ice-concentration.md

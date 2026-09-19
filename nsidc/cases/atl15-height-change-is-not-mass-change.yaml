@@ -4,7 +4,7 @@
 # is the coordinator's follow-up.
 id: atl15-height-change-is-not-mass-change
 type: gotcha-avoidance
-targets: []  # no cryosphere skill yet; the case rests on the concepts alone
+targets: [ice-mass-change]  # the land-ice skill the case exercises; concept_basis names the concepts
 concept_basis:
   - knowledge/nsidc/gotchas/atl15-height-change-is-not-mass-change.md
   - knowledge/nsidc/datasets/icesat2-atl15.md

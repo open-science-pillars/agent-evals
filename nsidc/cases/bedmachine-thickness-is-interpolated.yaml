@@ -4,7 +4,7 @@
 # in a suite manifest is the coordinator's follow-up.
 id: bedmachine-thickness-is-interpolated
 type: gotcha-avoidance
-targets: []  # no cryosphere skill yet; the case rests on the concepts alone
+targets: [ice-sheet-input-output]  # the land-ice skill the case exercises; concept_basis names the concepts
 concept_basis:
   - knowledge/nsidc/gotchas/bedmachine-thickness-is-interpolated.md
   - knowledge/nsidc/datasets/bedmachine-greenland-antarctica.md
