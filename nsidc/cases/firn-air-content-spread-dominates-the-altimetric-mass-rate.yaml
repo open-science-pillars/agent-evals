@@ -41,8 +41,10 @@ graders:
       size of the firn contribution over the window, noting that the
       firn rate's own interval can cross zero. Naming the domain and
       sampling of the firn run, the absence of a stated forcing for the
-      Greenland GEMB run, or the fact that the published mass change is
-      the mean of the two models strengthens a pass. FAIL if the
+      Greenland GEMB run, the fact that the published mass change is
+      the mean of the two models, or the point that two firn models
+      forced with the same climate data can disagree on the sign of a
+      firn air content trend strengthens a pass. FAIL if the
       response reports a mass rate whose uncertainty is the elevation
       error alone, adopts an effective density in place of the firn
       subtraction, calls the two-model spread a formal or measurement
