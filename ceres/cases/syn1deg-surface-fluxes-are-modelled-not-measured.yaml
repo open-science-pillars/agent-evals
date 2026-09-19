@@ -1,0 +1,70 @@
+# Authored 2026-09-19 for the synoptic radiation knowledge deliverable
+# (the ASDC bundle's SYN1deg concepts). Ground truth: the concepts
+# below, drafts until the maintainer reviews them; registration in a
+# suite manifest is the coordinator's follow-up.
+id: syn1deg-surface-fluxes-are-modelled-not-measured
+type: gotcha-avoidance
+targets: []  # no atmosphere skill yet; the case rests on the concepts alone
+concept_basis:
+  - knowledge/asdc/gotchas/syn1deg-surface-fluxes-are-modelled-not-measured.md
+  - knowledge/asdc/datasets/ceres-syn1deg.md
+prompt: >
+  I have a year of one minute radiometer data from a land site for
+  2019. Pull the CERES SYN1deg 1Hour downward shortwave and downward
+  longwave irradiance for the one degree box containing the site, use
+  the adjusted fields since those are the ones constrained to the
+  CERES observations, and give me the hourly mean bias of my site
+  against the satellite measurements with the product's uncertainty
+  attached. While you are in the file, take the shortwave flux
+  difference between the 850 hPa level and the surface as the observed
+  shortwave absorption in the boundary layer.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes that no CERES instrument
+      measures a surface or an in-atmosphere flux and that every such
+      field in SYN1deg is Langley Fu-Liou radiative transfer output
+      driven by imager and geostationary cloud retrievals, reanalysis
+      profiles, modelled aerosols and retrieved albedos, so the
+      requested comparison is a computation against a measurement and
+      not two measurements; AND establishes that neither form of the
+      computed fluxes in this product is constrained to the
+      observations the way the user assumes: the data quality summary
+      advises against the adjusted shortwave and longwave fluxes
+      because code bugs put errors in them, and the initial untuned
+      fluxes carry geostationary cloud artifacts, with the TOA
+      validation document stating that tuning the computed fluxes to
+      the observed ones was unsuccessful for geostationary clouds; AND
+      declines to report the site as biased against a satellite
+      measurement, inverting the direction so that the site data is the
+      reference and the product is the estimate under test; AND
+      attaches an uncertainty matched to the hourly scale asked for
+      (the surface validation document's hourly gridded values, 43
+      W m-2 downward shortwave and 21 W m-2 downward longwave for ocean
+      plus land) rather than the monthly gridded values; AND treats the
+      850 hPa minus surface shortwave difference as a difference of two
+      model outputs rather than an observed absorption. Naming that the
+      observed quantity in the file is the TOA flux, that the
+      agreement between the computed and observed TOA fluxes is the
+      project's own quality indicator for that month, or that a
+      monthly mean surface flux has its own product in EBAF-Surface
+      where the adjustment to the observed TOA is actually made,
+      strengthens a pass. FAIL if the response calls the SYN1deg
+      surface irradiances measurements or observations, reports the
+      site as biased against the satellite, quotes a monthly or annual
+      uncertainty for an hourly comparison, uses the adjusted fluxes
+      without naming the caution against them, or presents the
+      in-atmosphere flux difference as an observed absorption.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is doubled. The prompt calls the fields measurements, which
+  the file does nothing to contradict since the computed surface
+  variables sit beside the observed TOA ones with no marker of
+  provenance, and it asks for the adjusted fields with the one piece of
+  reasoning that sounds right and is wrong in this product: the
+  ordering page describes the SYN1deg computed fluxes as consistent
+  with the CERES observed TOA fluxes, while the summary's cautions
+  advise against the adjusted fluxes outright. The failure this case
+  exists to catch is a site validation reported with its sign inverted
+  and a radiative transfer output presented as an observation.
