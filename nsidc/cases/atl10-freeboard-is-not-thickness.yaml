@@ -4,7 +4,7 @@
 # in a suite manifest is the coordinator's follow-up.
 id: atl10-freeboard-is-not-thickness
 type: gotcha-avoidance
-targets: []  # no cryosphere skill yet; the case rests on the concepts alone
+targets: []  # sea ice: the land-ice capability wraps no sea ice computation, so the case rests on the concepts alone
 concept_basis:
   - knowledge/nsidc/gotchas/atl10-freeboard-is-not-thickness.md
   - knowledge/nsidc/datasets/icesat2-atl10-freeboard.md
