@@ -1,10 +1,11 @@
 # Authored 2026-09-14 for the radiation budget knowledge deliverable
-# (the ASDC bundle's first concepts). Ground truth: the concepts below,
-# drafts until the maintainer reviews them; registration in a suite
-# manifest is the coordinator's follow-up.
+# (the ASDC bundle's first concepts), which are stable and signed. The
+# case was registered in the nasa-daac-knowledge manifest and, from
+# 2026-09-19, targets the atmospheric-physics energy-budget-closure
+# skill, which carries the anchoring into every report it writes.
 id: ebaf-imbalance-anchored-to-ocean-heating
 type: gotcha-avoidance
-targets: []  # no atmosphere skill yet; the case rests on the concepts alone
+targets: [energy-budget-closure]  # the atmospheric-physics skill the case exercises; concept_basis names the concepts
 concept_basis:
   - knowledge/asdc/gotchas/ebaf-imbalance-anchored-to-ocean-heating.md
   - knowledge/asdc/datasets/ceres-ebaf-ed4-2.md

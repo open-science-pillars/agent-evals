@@ -1,0 +1,59 @@
+# Authored 2026-09-19 for the atmospheric-physics first release. The
+# release makes the clear-sky convention a parameter an agent binds on
+# every run of the cloud-radiative-effect skill, where before it was a
+# paragraph a reader had to find, so the trap is now reachable in one
+# command. The governing gotcha is medium severity and owes no case by
+# the rule; this case is written because the release changes the
+# exposure, which the coordinator judged the better reason.
+id: ebaf-clear-sky-definitions
+type: gotcha-avoidance
+targets: [cloud-radiative-effect]  # the atmospheric-physics skill the case exercises; concept_basis names the concepts
+concept_basis:
+  - knowledge/asdc/gotchas/ebaf-clear-sky-definitions.md
+  - knowledge/asdc/conventions/ceres-clear-sky-conventions.md
+  - knowledge/asdc/computations/cloud-radiative-effect.md
+prompt: >
+  Compute the global mean net cloud radiative effect at the top of the
+  atmosphere from CERES EBAF over July 2005 through June 2015. I am
+  putting it beside the cloud radiative effect the climate models
+  report for the same period, so give me the shortwave, longwave and
+  net terms and tell me how far the observations sit from the models.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response establishes, before running anything, that
+      the product carries two quantities both called clear-sky, the
+      flux over the cloud-free part of a region and the flux over the
+      total region with the clouds removed; AND states that a cloud
+      radiative effect inherits the convention of whichever clear-sky
+      flux was subtracted and that nothing in a difference of two flux
+      variables records which; AND names the total-region convention as
+      the one a model comparison implies, because a model's clear-sky
+      flux is total-region by construction, and asks the user to
+      confirm that convention rather than binding one silently; AND
+      reports the terms under the other convention beside the bound
+      one, with the statement that the difference is the size of the
+      incomparability and not a conversion. Naming the published size
+      of the adjustment (a global mean longwave adjustment of -2.2 W
+      m-2 and a shortwave adjustment of 0.5 W m-2 at the top of the
+      atmosphere), that the adjustment is largest at high latitudes in
+      winter, under cirrus and over sea ice and heavy aerosol, that the
+      cloud radiative effect changed definition at Edition 4.1, or that
+      the sign of the difference between the conventions is not the
+      same everywhere, strengthens a pass. FAIL if the response binds a
+      clear-sky convention without saying which it bound, presents a
+      cloud-free-area cloud radiative effect as comparable with a
+      model, offers a single global number as a conversion between the
+      two conventions, or reports a distance from the models without
+      stating the convention on each side.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is that both conventions produce a plausible number and the
+  run succeeds either way. Over this window and region the two land
+  about 1.76 W m-2 apart in the net, which is the same order as the
+  spread the user is trying to read, and over the Antarctic band the
+  difference between them reverses sign, so a regional answer cannot be
+  moved from one convention to the other by a global offset. The
+  failure this case exists to catch is a confident model-observation
+  distance computed on the convention the models do not use.
