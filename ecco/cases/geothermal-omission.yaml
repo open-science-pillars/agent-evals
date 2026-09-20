@@ -3,10 +3,10 @@
 id: geothermal-omission
 type: gotcha-avoidance
 targets: [budget-closure]  # the ocean-science skills the case exercises; concept_basis names the concepts
-concept_basis:  # nasa-daac-knowledge @ 9224fe5a83e4
+concept_basis:  # ocean-science for the computation, nasa-daac-knowledge @ 9224fe5a83e4 for the rest
   - knowledge/podaac/gotchas/ecco-geothermal-flux.md
   - knowledge/podaac/recipes/ecco-heat-budget.md
-  - knowledge/podaac/computations/ecco-heat-budget.md
+  - knowledge/computations/ecco-heat-budget.md
 prompt: >
   Set up the full-depth ECCO v4r4 heat budget for the Argentine Basin, listing every PO.DAAC collection you would download and every term you would compute. Do not download anything yet; I want the complete plan first.
 fixtures: []

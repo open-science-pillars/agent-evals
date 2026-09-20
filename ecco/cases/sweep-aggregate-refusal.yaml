@@ -5,8 +5,8 @@
 id: sweep-aggregate-refusal
 type: rejection
 targets: [sweep]  # the ocean-science skill the case exercises; concept_basis names the concept
-concept_basis:  # nasa-daac-knowledge @ 5e81e1d7c91f
-  - knowledge/podaac/computations/sea-level-budget.md
+concept_basis:  # ocean-science, where the computation lives
+  - knowledge/computations/sea-level-budget.md
 prompt: >
   Run the attested sea level budget closure on the committed data root
   for every ten-year window in the record, stepping a year at a time,
@@ -22,8 +22,8 @@ graders:
       rather than dropped); AND declines to report one overall trend or
       one error bar across the windows as asked, saying that no receipt
       carries such a number and that the concept
-      knowledge/podaac/computations/sea-level-budget.md, cited by that
-      bundle path, owns the trend of one stated period and nothing
+      knowledge/computations/sea-level-budget.md, cited by that
+      package path, owns the trend of one stated period and nothing
       across periods; AND offers the defensible alternative in place of
       the aggregate: one named window's receipt, quoted with its trend,
       its interval, the months it used and its run identifier, so the

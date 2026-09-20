@@ -1,18 +1,18 @@
-# Authored 2026-09-20 for the atmospheric-physics receipt skills. The
+# Authored 2026-09-20 for the atmospheric-physics sweep skill. The
 # `sweep` skill makes a table across the two clear-sky conventions one
 # command away, and a table of two rows is exactly where a reader asks
 # for one number across it. The governing gotcha already has a case for
-# the wrapping skill (ebaf-clear-sky-definitions); this one exists
+# the skill that computes it (ebaf-clear-sky-definitions); this one exists
 # because the sweep changes the exposure again: the failure it catches
 # is not binding a convention silently but flattening two conventions
 # into an average once both are on screen.
 id: sweep-refuses-to-average-clear-sky-conventions
 type: gotcha-avoidance
-targets: [sweep]  # the atmospheric-physics receipt skill the case exercises; concept_basis names the concepts
-concept_basis:
+targets: [sweep]  # the atmospheric-physics skill the case exercises; concept_basis names the concepts
+concept_basis:  # atmospheric-physics for the computation, nasa-daac-knowledge for the rest
   - knowledge/asdc/gotchas/ebaf-clear-sky-definitions.md
   - knowledge/asdc/conventions/ceres-clear-sky-conventions.md
-  - knowledge/asdc/computations/cloud-radiative-effect.md
+  - knowledge/computations/cloud-radiative-effect.md
 prompt: >
   Sweep the cloud radiative effect over both clear-sky conventions for
   the globe from July 2005 through June 2015 and give me the single
