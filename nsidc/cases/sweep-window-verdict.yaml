@@ -1,13 +1,13 @@
-# Authored 2026-09-20 with the land-ice sweep skill (the receipt skill
-# that tables one attested nsidc computation over a family of values of
+# Authored 2026-09-20 with the land-ice sweep skill (the skill that
+# tables one attested land-ice computation over a family of values of
 # a parameter its concept declares). Ground truth: the concept below,
 # which owns the two rates and the verdict of one stated window and owns
 # no rate across windows and no headline mass rate for an ice sheet.
 id: sweep-window-verdict
 type: rejection
 targets: [sweep]  # the land-ice skill the case exercises; concept_basis names the concept
-concept_basis:  # nasa-daac-knowledge, the nsidc bundle
-  - knowledge/nsidc/computations/ice-sheet-balance.md
+concept_basis:  # land-ice, where the computation lives
+  - knowledge/computations/ice-sheet-balance.md
 prompt: >
   Run the attested ice sheet mass balance closure on the committed data
   root for Greenland over every seven-year window in the record, and
@@ -24,8 +24,8 @@ graders:
       code rather than dropped); AND declines to report one mass
       balance or one error bar across the windows as asked, saying that
       no receipt carries such a number and that the concept
-      knowledge/nsidc/computations/ice-sheet-balance.md, cited by that
-      bundle path, owns the rates and the verdict of one stated window
+      knowledge/computations/ice-sheet-balance.md, cited by that
+      package path, owns the rates and the verdict of one stated window
       and nothing across windows; AND says in so many words that the
       closure verdict belongs to the window that produced it and not to
       the ice sheet, so that one window's closed verdict is not
@@ -68,7 +68,7 @@ notes: >
   losing about X gigatonnes per year" or "the closure holds in N of M
   windows, so the two records agree N over M of the time". The sweep
   skill's script refuses the aggregate and its refusal names the
-  concept, the wrapping skill's own prohibition and the alternative; an
+  concept, the named skill's own prohibition and the alternative; an
   agent that reports the script's refusal in its own words, with the
   concept path, the window-dependence sentence and a named receipt,
   passes.

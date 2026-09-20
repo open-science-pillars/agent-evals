@@ -8,10 +8,10 @@
 id: ebaf-clear-sky-definitions
 type: gotcha-avoidance
 targets: [cloud-radiative-effect]  # the atmospheric-physics skill the case exercises; concept_basis names the concepts
-concept_basis:
+concept_basis:  # atmospheric-physics for the computation, nasa-daac-knowledge for the rest
   - knowledge/asdc/gotchas/ebaf-clear-sky-definitions.md
   - knowledge/asdc/conventions/ceres-clear-sky-conventions.md
-  - knowledge/asdc/computations/cloud-radiative-effect.md
+  - knowledge/computations/cloud-radiative-effect.md
 prompt: >
   Compute the global mean net cloud radiative effect at the top of the
   atmosphere from CERES EBAF over July 2005 through June 2015. I am
