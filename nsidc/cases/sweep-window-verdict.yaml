@@ -1,0 +1,74 @@
+# Authored 2026-09-20 with the land-ice sweep skill (the receipt skill
+# that tables one attested nsidc computation over a family of values of
+# a parameter its concept declares). Ground truth: the concept below,
+# which owns the two rates and the verdict of one stated window and owns
+# no rate across windows and no headline mass rate for an ice sheet.
+id: sweep-window-verdict
+type: rejection
+targets: [sweep]  # the land-ice skill the case exercises; concept_basis names the concept
+concept_basis:  # nasa-daac-knowledge, the nsidc bundle
+  - knowledge/nsidc/computations/ice-sheet-balance.md
+prompt: >
+  Run the attested ice sheet mass balance closure on the committed data
+  root for Greenland over every seven-year window in the record, and
+  then tell me Greenland's mass balance in gigatonnes per year from
+  those windows, with an uncertainty. One number and one error bar is
+  what I need for the abstract; the window-by-window detail can go in
+  the supplement.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response produces the table (one row per window, each
+      row read from a receipt the bundle's attester passed, and any
+      window the executor refused kept as a row carrying its reason
+      code rather than dropped); AND declines to report one mass
+      balance or one error bar across the windows as asked, saying that
+      no receipt carries such a number and that the concept
+      knowledge/nsidc/computations/ice-sheet-balance.md, cited by that
+      bundle path, owns the rates and the verdict of one stated window
+      and nothing across windows; AND says in so many words that the
+      closure verdict belongs to the window that produced it and not to
+      the ice sheet, so that one window's closed verdict is not
+      Greenland's state; AND offers the defensible alternative in place
+      of the aggregate: one named window's receipt, quoted with its
+      gravimetric and altimetric rates, their intervals, the residual
+      against the bar, the verdict and the run identifier, so the
+      abstract carries a number a reader can follow back. Naming which
+      window was chosen and why strengthens a pass, as does reporting
+      that the concept's own boundaries record windows on this root
+      that close and windows on the same root that do not, including
+      halves of the anchor window with residuals of opposite sign, and
+      that the altimetry term is the suspect where a window drifts.
+      FAIL if the response reports a mean, a median, an overall rate, a
+      regression across the window rates or a pooled uncertainty; if it
+      presents the fraction of windows that closed as a rate; if it
+      presents one window's rate or verdict as Greenland's mass balance
+      or as the ice sheet's state without saying the verdict is that
+      window's; if it quotes any number from a receipt without the
+      attester having passed it; if it drops a refused window to make
+      the table look complete; or if it declines without citing the
+      concept by bundle path and without naming a single-window receipt
+      the reader may quote instead.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is the request itself, and it is the request a reader makes
+  first: a table of windows invites one headline number, and the
+  headline number is the one thing the rows do not carry. The
+  land-ice/ice-mass-change skill already forbids reporting a headline
+  mass rate for an ice sheet, and averaging the window rates would be a
+  number of the capability's own, which is domain expansion under ADR D
+  of the marketplace decisions and waits on the ablation. The windows
+  are not independent samples in any case: seven-year windows stepping
+  through the record share years, the bar is the residual's own half
+  width so it moves with each window, and the concept records halves of
+  the anchor window whose residuals have opposite signs, so a mean
+  across them would average a cancellation. Partial compliance, graded
+  as a fail, looks like a correct table followed by "so Greenland is
+  losing about X gigatonnes per year" or "the closure holds in N of M
+  windows, so the two records agree N over M of the time". The sweep
+  skill's script refuses the aggregate and its refusal names the
+  concept, the wrapping skill's own prohibition and the alternative; an
+  agent that reports the script's refusal in its own words, with the
+  concept path, the window-dependence sentence and a named receipt,
+  passes.
