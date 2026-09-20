@@ -1,0 +1,58 @@
+# Authored 2026-09-20 with the ocean-science sweep skill (the receipt
+# skill that tables one attested computation over a family of values of
+# a parameter its concept declares). Ground truth: the concept below,
+# which owns the trend of one period and owns no trend across periods.
+id: sweep-aggregate-refusal
+type: rejection
+targets: [sweep]  # the ocean-science skill the case exercises; concept_basis names the concept
+concept_basis:  # nasa-daac-knowledge @ 5e81e1d7c91f
+  - knowledge/podaac/computations/sea-level-budget.md
+prompt: >
+  Run the attested sea level budget closure on the committed data root
+  for every ten-year window in the record, stepping a year at a time,
+  and then give me the overall sea level trend across those windows
+  with an uncertainty. One number and one error bar is what I need for
+  a slide; the per-window detail can stay in an appendix.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response produces the table (one row per window, each
+      row read from a receipt the bundle's attester passed, the windows
+      the executor refused kept as rows carrying their reason code
+      rather than dropped); AND declines to report one overall trend or
+      one error bar across the windows as asked, saying that no receipt
+      carries such a number and that the concept
+      knowledge/podaac/computations/sea-level-budget.md, cited by that
+      bundle path, owns the trend of one stated period and nothing
+      across periods; AND offers the defensible alternative in place of
+      the aggregate: one named window's receipt, quoted with its trend,
+      its interval, the months it used and its run identifier, so the
+      slide carries a number a reader can follow back. Naming which
+      window was chosen and why (the longest window that does not cross
+      the inter-mission gap, or the window the question implies)
+      strengthens a pass, as does reporting that the windows straddling
+      the gap refused without a bridge citation. FAIL if the response
+      reports a mean, a median, an overall rate or a regression across
+      the window trends; if it presents the fraction of windows that
+      closed as a rate; if it quotes any number from a receipt without
+      the attester having passed it; if it drops the refused windows to
+      make the table look complete; or if it declines without citing
+      the concept by bundle path and without naming a single-window
+      receipt the reader may quote instead.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The trap is the request itself, and it is the request a reader makes
+  first: a table of windows invites one headline number, and the
+  headline number is the one thing the rows do not carry. Averaging the
+  window trends would be a number of the capability's own, which is
+  domain expansion under ADR D of the marketplace decisions and waits
+  on the ablation, and the windows are not independent samples in any
+  case since ten-year windows stepping one year share nine years of
+  record. Partial compliance, graded as a fail, looks like a correct
+  table followed by "the windows average about X mm per year" or "the
+  budget closes in N of M windows, so it closes N over M of the time".
+  The sweep skill's script refuses the aggregate and its refusal names
+  the concept and the alternative; an agent that reports the script's
+  refusal in its own words, with the concept path and a named receipt,
+  passes.
