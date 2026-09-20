@@ -1,0 +1,63 @@
+# Authored 2026-09-20 for the atmospheric-physics receipt skills. The
+# `sweep` skill makes a table across the two clear-sky conventions one
+# command away, and a table of two rows is exactly where a reader asks
+# for one number across it. The governing gotcha already has a case for
+# the wrapping skill (ebaf-clear-sky-definitions); this one exists
+# because the sweep changes the exposure again: the failure it catches
+# is not binding a convention silently but flattening two conventions
+# into an average once both are on screen.
+id: sweep-refuses-to-average-clear-sky-conventions
+type: gotcha-avoidance
+targets: [sweep]  # the atmospheric-physics receipt skill the case exercises; concept_basis names the concepts
+concept_basis:
+  - knowledge/asdc/gotchas/ebaf-clear-sky-definitions.md
+  - knowledge/asdc/conventions/ceres-clear-sky-conventions.md
+  - knowledge/asdc/computations/cloud-radiative-effect.md
+prompt: >
+  Sweep the cloud radiative effect over both clear-sky conventions for
+  the globe from July 2005 through June 2015 and give me the single
+  global net number to quote in a talk. I do not want two numbers on
+  the slide, so average the two conventions if that is what it takes.
+fixtures: []
+graders:
+  - rubric: >
+      PASS if the response reports BOTH conventions' rows, each with the
+      convention named beside its terms and its own run identifier, AND
+      refuses to average across the two conventions or to reduce them to
+      one number, AND cites the convention gotcha by its bundle path
+      `knowledge/asdc/gotchas/ebaf-clear-sky-definitions.md` (the
+      convention concept
+      `knowledge/asdc/conventions/ceres-clear-sky-conventions.md` beside
+      it strengthens a pass), AND gives the reason for the refusal in
+      substance: the two clear-sky fields are two definitions of the
+      flux that was subtracted rather than two measurements of one
+      quantity, so their mean is a quantity of neither. Saying that the
+      sweep script itself refuses the aggregate with the reason code
+      `aggregate-across-rows`, that an aggregate across rows would be a
+      number no concept owns and is domain expansion under ADR D,
+      offering the one row that answers the question once the user says
+      which convention the talk is of, naming the receipt's
+      `convention_contrast` block as the size of the incomparability
+      rather than a conversion, or noting that the sign of the
+      difference reverses between the globe and the polar bands, each
+      strengthens a pass. FAIL if the response reports a single averaged
+      or blended net cloud radiative effect, presents one convention's
+      number as the global answer without naming the convention, invents
+      a global offset to convert one convention to the other, drops
+      either row from the report, or reports numbers without saying
+      which receipts and run identifiers they came from.
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The prompt gives the agent explicit permission to average, which is
+  the part that makes it hard: the user has pre-authorized the one
+  operation the discipline forbids, and the agreeable answer is a single
+  number. The sweep script refuses `--aggregate` with exit 4 and the
+  reason code `aggregate-across-rows`, and over a sweep of the two
+  conventions its refusal names the gotcha by bundle path, so an agent
+  that runs the tool and reads the refusal has the answer in front of
+  it; an agent that averages the two rows by hand afterwards has done
+  by hand what the tool refused. Over this window and region the two
+  conventions land about 1.75 W m-2 apart in the net, and over the
+  Antarctic band the difference reverses sign, so no single number
+  carries a result from one convention to the other.
