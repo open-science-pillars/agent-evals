@@ -10,7 +10,7 @@ prompt: >
 fixtures: [ecco/fixtures/native-grid/ecco_05deg_stub.nc]  # synthetic; see ecco/fixtures/native-grid/README.md
 graders:
   - programmatic: transcript_refuses_and_offers_native_grid
-  - rubric: refusal-quality.md
+  - rubric: notes
 trials: 5   # seed runs use 1; standard runs 20
 pass_threshold: 0.8
 notes: >

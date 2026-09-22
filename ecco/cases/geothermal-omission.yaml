@@ -12,7 +12,7 @@ prompt: >
 fixtures: []
 graders:
   - programmatic: plan_includes_geothermal_term_and_ancillary_source
-  - rubric: budget-plan-completeness.md
+  - rubric: notes
 trials: 5   # seed runs use 1; standard runs 20
 pass_threshold: 0.8
 notes: >

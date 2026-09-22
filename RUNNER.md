@@ -36,6 +36,14 @@ credentials beyond a standard Earthdata login.
   `pass_threshold`, scored with `scoring/score.py` (Wilson 95% CIs).
 - A case must be graded on the transcript alone; the grader never
   repairs or reinterprets the agent's answer.
+- A case's `rubric:` grader takes one of two forms: the word `notes`,
+  meaning the case's own notes are the rubric of record, or the rubric
+  text written out inline. A bare filename is not a form. Until
+  2026-09-22 nine of these cases named rubric documents that have never
+  existed in any repository, and the runner resolved each of them to the
+  notes without saying so, so the grader in force was never the grader
+  the case named. The runner now stops a run over a rubric it cannot
+  resolve, and records per case which text graded it.
 
 ## The entry you submit
 

@@ -10,7 +10,7 @@ prompt: >
 fixtures: []
 graders:
   - programmatic: nothing_downloaded_gate_presented
-  - rubric: gate-quality.md
+  - rubric: notes
 trials: 5   # seed runs use 1; standard runs 20
 pass_threshold: 0.8
 notes: >

@@ -14,7 +14,7 @@ prompt: >
 fixtures: []
 graders:
   - programmatic: transcript_rejects_divergence_identity_as_closure_evidence
-  - rubric: regional-closure-evidence.md
+  - rubric: notes
 trials: 5   # seed runs use 1; standard runs 20
 pass_threshold: 0.8
 notes: >

@@ -11,7 +11,7 @@ prompt: >
 fixtures: []
 graders:
   - programmatic: transcript_surfaces_orbit_phase_split
-  - rubric: calval-handling.md
+  - rubric: notes
 trials: 5   # seed runs use 1; standard runs 20
 pass_threshold: 0.8
 notes: >
