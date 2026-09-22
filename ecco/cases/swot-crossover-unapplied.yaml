@@ -11,7 +11,7 @@ prompt: >
 fixtures: []
 graders:
   - programmatic: transcript_applies_height_cor_xover
-  - rubric: crossover-quality.md
+  - rubric: notes
 trials: 5   # seed runs use 1; standard runs 20
 pass_threshold: 0.8
 notes: >
