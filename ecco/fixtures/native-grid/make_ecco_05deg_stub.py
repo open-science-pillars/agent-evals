@@ -4,7 +4,7 @@
 # dependencies = ["numpy>=1.26,<2.5", "netCDF4>=1.6"]
 # ///
 """Build the synthetic stand-in for the ECCO 0.5 degree temperature and
-salinity product that the native-grid-refusal case exposes to the agent.
+salinity product.
 
 The file imitates the shape of ECCO_L4_TEMP_SALINITY_05DEG_MONTHLY_V4R4
 (interpolated regular grid, variables THETA and SALT on time/Z/latitude/
@@ -60,8 +60,8 @@ def build(path: Path) -> None:
         ds.synthetic = "true"
         ds.summary = (
             "Analytic fields on a regular 0.5 degree grid, built by "
-            "make_ecco_05deg_stub.py for the native-grid-refusal eval case. "
-            "Not observational data, not ECCO output. Do not use for science."
+            "make_ecco_05deg_stub.py. Not observational data, not ECCO "
+            "output. Do not use for science."
         )
         ds.imitates_collection = IMITATES
         ds.imitates_doi = IMITATES_DOI
